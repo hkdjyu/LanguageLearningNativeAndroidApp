@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -24,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class WriteFragment extends Fragment implements AdapterView.OnItemSelectedListener {
+public class WriteMainFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
     enum SortOption {
         DATE,
@@ -34,25 +35,21 @@ public class WriteFragment extends Fragment implements AdapterView.OnItemSelecte
     private static final String PREFS_NAME = "NotePrefs";
     private static final String KEY_NOTE_COUNT = "NoteCount";
     private LinearLayout notesContainer;
+    private Button addButton;
+    private Spinner sortSpinner;
     private List<Note> noteList;
     private SortOption sortOption = SortOption.DATE;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_write, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_write_main, container, false);
 
-        notesContainer = rootView.findViewById(R.id.writeLinearLayoutNotes);
-        Button saveButton = rootView.findViewById(R.id.writeButtonSave);
 
         noteList = new ArrayList<>();
 
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveNote();
-            }
-        });
+        bindViews(rootView);
+        setUpAddButton(rootView);
         setupSortSpinner(rootView);
         loadNotesFromPreferences();
         displayNotes();
@@ -60,8 +57,24 @@ public class WriteFragment extends Fragment implements AdapterView.OnItemSelecte
         return rootView;
     }
 
+    private void bindViews(View rootView) {
+        notesContainer = rootView.findViewById(R.id.writeLinearLayoutNotes);
+        addButton = rootView.findViewById(R.id.writeButtonAdd);
+        sortSpinner = rootView.findViewById(R.id.writeSortSpinner);
+    }
+
+    private void setUpAddButton(View rootView) {
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO: transition to WriteCreateFragment
+                MainActivity mainActivity = (MainActivity) requireActivity();
+                mainActivity.NavigateToFragmentByFragment(new WriteCreateFragment());
+            }
+        });
+    }
+
     private void setupSortSpinner(View rootView) {
-        Spinner sortSpinner = rootView.findViewById(R.id.writeSortSpinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 requireContext(),
                 R.array.sort_options,
@@ -108,10 +121,6 @@ public class WriteFragment extends Fragment implements AdapterView.OnItemSelecte
         for (Note note : sortedNoteList) {
             createNoteView(note);
         }
-
-//        for (Note note : noteList) {
-//            createNoteView(note);
-//        }
     }
 
     private void loadNotesFromPreferences() {
@@ -121,48 +130,17 @@ public class WriteFragment extends Fragment implements AdapterView.OnItemSelecte
         for (int i = 0; i < noteCount; i++) {
             String title = sharedPreferences.getString("note_title_" + i, "");
             String content = sharedPreferences.getString("note_content_" + i, "");
+            long datetime = sharedPreferences.getLong("note_datetime_" + i, 0);
 
-            Note note = new Note();
-            note.setTitle(title);
-            note.setContent(content);
-            note.setDatetime(System.currentTimeMillis());
-
-            noteList.add(note);
-        }
-
-        Log.d("writeFragment", "Loaded " + noteList.size() + " notes from SharedPreferences.");
-    }
-
-    private void saveNote() {
-        EditText titleEditText = requireView().findViewById(R.id.writeEditTextTitle);
-        EditText contentEditText = requireView().findViewById(R.id.writeEditTextContent);
-
-        String title = titleEditText.getText().toString();
-        String content = contentEditText.getText().toString();
-        long datetime = System.currentTimeMillis();
-
-        if (!title.isEmpty() && !content.isEmpty()) {
             Note note = new Note();
             note.setTitle(title);
             note.setContent(content);
             note.setDatetime(datetime);
 
             noteList.add(note);
-            saveNotesToPreferences();
-
-            createNoteView(note);
-            clearInputFields();
         }
 
-        Log.d("writeFragment", "Saved Note: " + title + " - " + content);
-    }
-
-    private void clearInputFields() {
-        EditText titleEditText = requireView().findViewById(R.id.writeEditTextTitle);
-        EditText contentEditText = requireView().findViewById(R.id.writeEditTextContent);
-
-        titleEditText.getText().clear();
-        contentEditText.getText().clear();
+        Log.d("writeFragment", "Loaded " + noteList.size() + " notes from SharedPreferences.");
     }
 
     private void createNoteView(final Note note) {
@@ -181,7 +159,13 @@ public class WriteFragment extends Fragment implements AdapterView.OnItemSelecte
         noteView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showEditDialog(note);
+                WriteCreateFragment writeFragment = new WriteCreateFragment();
+                Bundle bundle = new Bundle();
+                bundle.putInt("noteIndex", noteList.indexOf(note));
+                writeFragment.setArguments(bundle);
+
+                MainActivity mainActivity = (MainActivity) requireActivity();
+                mainActivity.NavigateToFragmentByFragment(writeFragment);
             }
         });
 
@@ -194,27 +178,6 @@ public class WriteFragment extends Fragment implements AdapterView.OnItemSelecte
         });
 
         notesContainer.addView(noteView);
-    }
-
-    private void showEditDialog(final Note note) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        String title = note.getTitle();
-        builder.setTitle("Edit note: " + title);
-        builder.setMessage("The current data will be replaced.");
-
-        builder.setPositiveButton("Continue", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                EditText titleEditText = requireView().findViewById(R.id.writeEditTextTitle);
-                EditText contentEditText = requireView().findViewById(R.id.writeEditTextContent);
-
-                titleEditText.setText(note.getTitle());
-                contentEditText.setText(note.getContent());
-            }
-        });
-
-        builder.setNegativeButton("Cancel", null);
-        builder.show();
     }
 
     private void showDeleteDialog(final Note note) {

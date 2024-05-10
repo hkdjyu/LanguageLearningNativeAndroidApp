@@ -25,6 +25,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        getSupportActionBar().setTitle("Home");
+
         drawerLayout = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -66,6 +68,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             else if (getSupportFragmentManager().findFragmentById(R.id.fragment_container).getClass() == FlashcardViewFragment.class) {
                 NavigateToFragmentByNavID(R.id.nav_flashcard);
             }
+// if current fragment is write create, go back to write main
+            else if (getSupportFragmentManager().findFragmentById(R.id.fragment_container).getClass() == WriteCreateFragment.class) {
+                NavigateToFragmentByNavID(R.id.nav_write);
+            }
 
             // else, go back to home
             else{
@@ -86,21 +92,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     new HomeFragment()).commit();
 //            navigationView.setCheckedItem(R.id.nav_home);
+            getSupportActionBar().setTitle("Home");
         } else if (id == R.id.nav_settings) {
             Log.d("MainActivity", "Settings clicked");
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     new SettingsFragment()).commit();
 //            navigationView.setCheckedItem(R.id.nav_settings);
+            getSupportActionBar().setTitle("Settings");
         } else if (id == R.id.nav_write) {
             Log.d("MainActivity", "Write clicked");
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    new WriteFragment()).commit();
+                    new WriteMainFragment()).commit();
 //            navigationView.setCheckedItem(R.id.nav_write);
+            getSupportActionBar().setTitle("Write");
         } else if (id == R.id.nav_flashcard) {
             Log.d("MainActivity", "Read clicked");
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     new FlashcardMainFragment()).commit();
 //            navigationView.setCheckedItem(R.id.nav_flashcard);
+            getSupportActionBar().setTitle("Flashcard");
         }
 
         else {
@@ -108,6 +118,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     new HomeFragment()).commit();
 //            navigationView.setCheckedItem(R.id.nav_home);
+            getSupportActionBar().setTitle("Home");
         }
     }
 

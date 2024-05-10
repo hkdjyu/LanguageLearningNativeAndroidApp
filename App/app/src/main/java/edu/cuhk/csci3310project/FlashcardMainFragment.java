@@ -57,14 +57,14 @@ public class FlashcardMainFragment extends Fragment implements AdapterView.OnIte
     private void setupButtons(View rootView) {
         // Setup the buttons
         View AddButton = rootView.findViewById(R.id.fmAddButton);
-        View ViewButton = rootView.findViewById(R.id.fmRandomButton);
-        ViewButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Open the random flashcard set
-                openRandomSet();
-            }
-        });
+//        View ViewButton = rootView.findViewById(R.id.fmRandomButton);
+//        ViewButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                // Open the random flashcard set
+//                openRandomSet();
+//            }
+//        });
         AddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -12,14 +12,16 @@
         android:layout_height="wrap_content"
         android:text="Note Title"
         android:textSize="18sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        style="@style/PrimaryText"/>
 
     <TextView
         android:id = "@+id/noteItemContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Note Content"
-        android:layout_marginTop="4dp"/>
+        android:layout_marginTop="4dp"
+        style="@style/SecondaryText"/>
 
     <TextView
         android:id = "@+id/noteItemDatetime"
@@ -28,7 +30,8 @@
         android:text="2024-05-12 12:00:00"
         android:textSize="10dp"
         android:gravity="end"
-        android:layout_marginTop="4dp"/>
+        android:layout_marginTop="4dp"
+        style="@style/TertiaryText"/>
 
 
 

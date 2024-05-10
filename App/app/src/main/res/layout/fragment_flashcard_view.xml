@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".FlashcardViewFragment"
-    android:background="@color/teal_700">
+    style="@style/ScreenBackground">
 
     <TextView
         android:id="@+id/flashcardViewTitle"
@@ -15,56 +15,69 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
-        android:background="@color/purple_200"
-        android:gravity="center"
         android:text="Flashcard: 0/0"
-        android:textColor="@color/black"
-        android:textSize="18sp"
-        android:textStyle="bold" />
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/flashcardViewExitButton"
-        android:text="Exit"
-        android:textSize="18sp"
-        android:layout_below="@id/flashcardViewTitle"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="100dp"
-        android:layout_marginBottom="10dp" />
-
+        style="@style/TitleText1"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/flashcardViewLinearLayout"
-        android:layout_below="@id/flashcardViewExitButton"
+        android:layout_below="@id/flashcardViewTitle"
         android:orientation="vertical"
         android:gravity="center"
-        android:padding="40px">
+        android:padding="40px"
+        android:weightSum="100">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/flashcardViewExitButton"
+            android:text="EXIT"
+            android:textSize="18sp"
+            android:layout_marginStart="120dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="120dp"
+            android:layout_marginBottom="10dp"
+            style="@style/Button3"/>
+
+        <TextView
+            android:id="@+id/flashcardViewText"
+            style="@style/FlashcardFront"
+            android:layout_width="320dp"
+            android:layout_height="180dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="100dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="100dp"
+            android:gravity="center"
+            android:text="Front"
+            android:textSize="24dp"
+            android:textStyle="bold"
+            android:visibility="visible" />
 
         <TextView
             android:layout_width="320dp"
             android:layout_height="180dp"
-            android:id="@+id/flashcardViewText"
-            android:layout_below="@id/flashcardViewTitle"
+            android:visibility="gone"
+            android:id="@+id/flashcardViewTextBack"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="100dp"
             android:layout_marginEnd="10dp"
-            android:layout_marginBottom="40dp"
-            android:background="@color/purple_100"
+            android:layout_marginBottom="100dp"
             android:gravity="center"
-            android:text="Front"
-            android:textColor="@color/black"
-            android:textSize="18dp"
-            android:textStyle="bold" />
+            android:text="Back"
+            android:textSize="24dp"
+            android:textStyle="bold"
+            style="@style/FlashcardBack"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:orientation="horizontal"
-            android:weightSum="3">
+            android:weightSum="3"
+            android:padding="10dp">
 
             <Button
                 android:layout_width="wrap_content"
@@ -72,13 +85,13 @@
                 android:id="@+id/flashcardViewPrevButton"
                 android:layout_weight="1"
                 android:text="Prev"
-                android:textColor="@color/white"
                 android:textSize="18sp"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:background="@color/purple_500"/>
+                style="@style/Button2"/>
 
             <Button
+                android:visibility="invisible"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/flashcardViewFlipButton"
@@ -96,11 +109,10 @@
                 android:id="@+id/flashcardViewNextButton"
                 android:layout_weight="1"
                 android:text="Next"
-                android:textColor="@color/white"
                 android:textSize="18sp"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:background="@color/purple_500"/>
+                style="@style/Button1"/>
 
         </LinearLayout>
 

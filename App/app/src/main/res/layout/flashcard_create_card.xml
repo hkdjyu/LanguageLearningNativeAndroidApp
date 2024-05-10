@@ -12,8 +12,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="40px"
-        android:background="@color/purple_100">
+        android:padding="20dp"
+        style="@style/FlashcardSetPreview">
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/flashcard_create_remove_card_button"
+            android:src="@drawable/button_remove"
+            android:layout_gravity="end"
+            android:layout_marginBottom="8dp"
+            android:backgroundTint="@color/transparent"/>
 
         <EditText
             android:layout_width="match_parent"
@@ -35,6 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:padding="4dp"
             android:weightSum="2">
 
             <Button
@@ -45,7 +55,8 @@
                 android:text="View"
                 android:textSize="18sp"
                 android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"/>
+                android:layout_marginEnd="10dp"
+                style="@style/Button3"/>
 
             <Button
                 android:layout_width="match_parent"
@@ -55,7 +66,8 @@
                 android:text="Add Photo"
                 android:textSize="18sp"
                 android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"/>
+                android:layout_marginEnd="10dp"
+                style="@style/Button3"/>
 
         </LinearLayout>
 

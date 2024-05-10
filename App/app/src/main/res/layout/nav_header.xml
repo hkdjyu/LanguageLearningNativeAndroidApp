@@ -5,8 +5,8 @@
     android:layout_height="176dp"
     android:gravity="bottom"
     android:padding="16dp"
-    android:background="@color/lavender"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+    android:theme="@style/ThemeOverlay.AppCompat.Dark"
+    style="@style/TertiaryBackground">
 
     <TextView
         android:layout_width="match_parent"
@@ -14,7 +14,8 @@
         android:text="Hello!"
         android:textSize="24sp"
         android:gravity="bottom"
-        android:textColor="@color/white"/>
+        android:textColor="@color/black"
+        style="@style/PrimaryText"/>
 
 
 
