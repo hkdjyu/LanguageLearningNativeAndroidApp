@@ -130,7 +130,7 @@ public class FlashcardMainFragment extends Fragment implements AdapterView.OnIte
         List<FlashcardSet> sortedSetList = new ArrayList<>(setList);
         switch (sortOption) {
             case DATE:
-                sortedSetList.sort((set1, set2) -> Long.compare(set1.getDatetime(), set2.getDatetime()));
+                sortedSetList.sort((set1, set2) -> Long.compare(set2.getDatetime(), set1.getDatetime()));
                 break;
 
             case TITLE:
@@ -214,8 +214,28 @@ public class FlashcardMainFragment extends Fragment implements AdapterView.OnIte
     }
 
     private void deleteSetAndRefresh(FlashcardSet set) {
+        int setIndex = setList.indexOf(set);
+
+        // Delete the flashcard set from SharedPreferences
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove("set_id_" + setIndex);
+        editor.remove("set_title_" + setIndex);
+        editor.remove("set_count_" + setIndex);
+        editor.remove("set_datetime_" + setIndex);
+        editor.apply();
+
+        // Delete the flashcards in the set from SharedPreferences
+        String CARD_PREFS_NAME = "FlashCardPrefs" + setIndex;
+        SharedPreferences sharedPreferences2 = requireActivity().getSharedPreferences(CARD_PREFS_NAME, 0);
+        SharedPreferences.Editor editor2 = sharedPreferences2.edit();
+        editor2.clear();
+        editor2.apply();
+
         // Delete the flashcard set and refresh the display
         setList.remove(set);
+
+
         saveSetsToPreferences();
         refreshSetsContainer();
     }
