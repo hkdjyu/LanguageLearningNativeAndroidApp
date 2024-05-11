@@ -4,22 +4,22 @@ public class Flashcard {
     private int setID;
     private String frontText;
     private String backText;
-    private String imageUri;
+    private String image;
     private long datetime;
 
     public Flashcard() {
         this.setID = 0;
         this.frontText = "";
         this.backText = "";
-        this.imageUri = "";
+        this.image = "";
         this.datetime = 0;
     }
 
-    public Flashcard(int setID, String frontText, String backText, String imageUri, long datetime) {
+    public Flashcard(int setID, String frontText, String backText, String image, long datetime) {
         this.setID = setID;
         this.frontText = frontText;
         this.backText = backText;
-        this.imageUri = imageUri;
+        this.image = image;
         this.datetime = datetime;
     }
 
@@ -47,12 +47,12 @@ public class Flashcard {
         this.backText = backText;
     }
 
-    public String getImageUri() {
-        return imageUri;
+    public String getImage() {
+        return image;
     }
 
-    public void setImageUri(String imageUri) {
-        this.imageUri = imageUri;
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public long getDatetime() {

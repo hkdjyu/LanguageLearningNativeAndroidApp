@@ -24,15 +24,15 @@
         android:id="@+id/flashcardViewLinearLayout"
         android:layout_below="@id/flashcardViewTitle"
         android:orientation="vertical"
-        android:gravity="center"
+        android:gravity="center_horizontal"
         android:padding="40px"
         android:weightSum="100">
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/flashcardViewExitButton"
-            android:text="EXIT"
+            android:id="@+id/flashcardViewEditButton"
+            android:text="EDIT"
             android:textSize="18sp"
             android:layout_marginStart="120dp"
             android:layout_marginTop="10dp"
@@ -40,13 +40,18 @@
             android:layout_marginBottom="10dp"
             style="@style/Button3"/>
 
+        <ImageView
+            android:id="@+id/flashcardViewImage"
+            android:layout_width="320dp"
+            android:layout_height="180dp"/>
+
         <TextView
             android:id="@+id/flashcardViewText"
             style="@style/FlashcardFront"
             android:layout_width="320dp"
             android:layout_height="180dp"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="50dp"
             android:gravity="center"
@@ -61,7 +66,7 @@
             android:visibility="gone"
             android:id="@+id/flashcardViewTextBack"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="50dp"
             android:gravity="center"
@@ -77,7 +82,8 @@
             android:layout_marginBottom="10dp"
             android:orientation="horizontal"
             android:weightSum="3"
-            android:padding="10dp">
+            android:padding="10dp"
+            android:visibility="invisible">
 
             <Button
                 android:layout_width="wrap_content"

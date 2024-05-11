@@ -117,8 +117,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     new AiMainFragment()).commit();
 //            navigationView.setCheckedItem(R.id.nav_ai);
             getSupportActionBar().setTitle("AI");
+        } else if (id ==R.id.nav_quiz) {
+            Log.d("MainActivity", "Quiz clicked");
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    new QuizMainFragment()).commit();
+//            navigationView.setCheckedItem(R.id.nav_quiz);
+            getSupportActionBar().setTitle("Quiz");
         }
-
         else {
             // default to home
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,

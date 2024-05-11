@@ -3,6 +3,8 @@ package edu.cuhk.csci3310project;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +16,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -37,20 +38,20 @@ public class WriteMainFragment extends Fragment implements AdapterView.OnItemSel
     private LinearLayout notesContainer;
     private Button addButton;
     private Spinner sortSpinner;
+    private EditText searchEditText;
     private List<Note> noteList;
     private SortOption sortOption = SortOption.DATE;
+    private String keyword = "";
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_write_main, container, false);
 
-
         noteList = new ArrayList<>();
 
         bindViews(rootView);
-        setUpAddButton(rootView);
-        setupSortSpinner(rootView);
+        setUpViews(rootView);
         loadNotesFromPreferences();
         displayNotes();
 
@@ -61,9 +62,10 @@ public class WriteMainFragment extends Fragment implements AdapterView.OnItemSel
         notesContainer = rootView.findViewById(R.id.writeLinearLayoutNotes);
         addButton = rootView.findViewById(R.id.writeButtonAdd);
         sortSpinner = rootView.findViewById(R.id.writeSortSpinner);
+        searchEditText = rootView.findViewById(R.id.writeSearchEditText);
     }
 
-    private void setUpAddButton(View rootView) {
+    private void setUpViews(View rootView) {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -72,9 +74,7 @@ public class WriteMainFragment extends Fragment implements AdapterView.OnItemSel
                 mainActivity.NavigateToFragmentByFragment(new WriteCreateFragment());
             }
         });
-    }
 
-    private void setupSortSpinner(View rootView) {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 requireContext(),
                 R.array.sort_options,
@@ -82,6 +82,24 @@ public class WriteMainFragment extends Fragment implements AdapterView.OnItemSel
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sortSpinner.setAdapter(adapter);
         sortSpinner.setOnItemSelectedListener(this);
+
+        searchEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                keyword = editable.toString();
+                refreshNotesContainer();
+            }
+        });
     }
 
     @Override
@@ -107,7 +125,17 @@ public class WriteMainFragment extends Fragment implements AdapterView.OnItemSel
         if (noteList.isEmpty()) {
             return;
         }
-        List<Note> sortedNoteList = new ArrayList<>(noteList);
+
+        // filtering
+        List<Note> filteredNoteList = new ArrayList<>();
+        for (Note note : noteList) {
+            if (note.getTitle().toLowerCase().contains(keyword.toLowerCase()) || note.getContent().toLowerCase().contains(keyword.toLowerCase())) {
+                filteredNoteList.add(note);
+            }
+        }
+
+        // sorting
+        List<Note> sortedNoteList = new ArrayList<>(filteredNoteList);
         switch (sortOption) {
             case DATE:
                 sortedNoteList.sort((note1, note2) -> Long.compare(note2.getDatetime(), note1.getDatetime()));

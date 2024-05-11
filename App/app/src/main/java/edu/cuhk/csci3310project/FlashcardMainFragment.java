@@ -7,12 +7,15 @@ import android.os.Bundle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -36,6 +39,7 @@ public class FlashcardMainFragment extends Fragment implements AdapterView.OnIte
     private LinearLayout setsContainer;
     private List<FlashcardSet> setList;
     private SortOption sortOption = SortOption.DATE;
+    private String keyword = "";
 
 
     @Override
@@ -46,30 +50,49 @@ public class FlashcardMainFragment extends Fragment implements AdapterView.OnIte
         setsContainer = rootView.findViewById(R.id.fmContainer);
         setList = new ArrayList<>();
 
-        setupButtons(rootView);
-        setupSortSpinner(rootView);
+        setupViews(rootView);
         loadSetsFromPreferences();
         displaySets();
 
         return rootView;
     }
 
-    private void setupButtons(View rootView) {
+    private void setupViews(View rootView) {
         // Setup the buttons
         View AddButton = rootView.findViewById(R.id.fmAddButton);
-//        View ViewButton = rootView.findViewById(R.id.fmRandomButton);
-//        ViewButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                // Open the random flashcard set
-//                openRandomSet();
-//            }
-//        });
         AddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Open the add flashcard set dialog
                 openCreateSetFragment();
+            }
+        });
+
+        Spinner sortSpinner = rootView.findViewById(R.id.fmSortSpinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                requireContext(),
+                R.array.sort_options,
+                android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sortSpinner.setAdapter(adapter);
+        sortSpinner.setOnItemSelectedListener(this);
+
+        EditText searchEditText = rootView.findViewById(R.id.fmSearchEditText);
+        searchEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Do nothing
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Do nothing
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                keyword = s.toString();
+                refreshSetsContainer();
             }
         });
     }
@@ -89,17 +112,6 @@ public class FlashcardMainFragment extends Fragment implements AdapterView.OnIte
         // Open the add flashcard set dialog
         MainActivity activity = (MainActivity) requireActivity();
         activity.NavigateToFragmentByFragment(new FlashcardCreateFragment());
-    }
-
-    private void setupSortSpinner(View rootView) {
-        Spinner sortSpinner = rootView.findViewById(R.id.fmSortSpinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                requireContext(),
-                R.array.sort_options,
-                android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        sortSpinner.setAdapter(adapter);
-        sortSpinner.setOnItemSelectedListener(this);
     }
 
     @Override
@@ -127,7 +139,30 @@ public class FlashcardMainFragment extends Fragment implements AdapterView.OnIte
         if (setList.isEmpty()) {
             return;
         }
-        List<FlashcardSet> sortedSetList = new ArrayList<>(setList);
+
+        // Filter the flashcard sets
+        List<FlashcardSet> filteredSetList = new ArrayList<>();
+        for (FlashcardSet set : setList) {
+            if (set.getTitle().toLowerCase().contains(keyword.toLowerCase())) {
+                filteredSetList.add(set);
+            } else if (set.getFlashcardCount() > 0) {
+                boolean found = false;
+                Log.d("FlashcardMainFragment", "number of flashcards in var: " + set.getFlashcardCount());
+                Log.d("FlashcardMainFragment", "number of flashcards in list: " + set.getFlashcards(requireActivity()).size());
+                for (Flashcard card : set.getFlashcards(requireActivity())) {
+                    if (card.getFrontText().toLowerCase().contains(keyword.toLowerCase()) || card.getBackText().toLowerCase().contains(keyword.toLowerCase())) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (found) {
+                    filteredSetList.add(set);
+                }
+            }
+        }
+
+        // Sort the flashcard sets
+        List<FlashcardSet> sortedSetList = new ArrayList<>(filteredSetList);
         switch (sortOption) {
             case DATE:
                 sortedSetList.sort((set1, set2) -> Long.compare(set2.getDatetime(), set1.getDatetime()));
@@ -200,7 +235,7 @@ public class FlashcardMainFragment extends Fragment implements AdapterView.OnIte
     private void showDeleteDialog(FlashcardSet set) {
         // Show a dialog to confirm deletion of the flashcard set
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        builder.setTitle("Delete this set.");
+        builder.setTitle("Delete Set");
         builder.setMessage("Are you sure you want to delete\n" + set.getTitle() + "?");
         builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
             @Override

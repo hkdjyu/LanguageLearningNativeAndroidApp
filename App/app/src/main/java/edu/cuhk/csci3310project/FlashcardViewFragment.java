@@ -1,15 +1,19 @@
 package edu.cuhk.csci3310project;
 
         import android.content.SharedPreferences;
+        import android.graphics.Bitmap;
+        import android.graphics.BitmapFactory;
         import android.os.Bundle;
 
         import androidx.fragment.app.Fragment;
 
+        import android.util.Base64;
         import android.util.Log;
         import android.view.LayoutInflater;
         import android.view.View;
         import android.view.ViewGroup;
         import android.widget.Button;
+        import android.widget.ImageView;
         import android.widget.TextView;
 
         import java.util.ArrayList;
@@ -20,6 +24,8 @@ public class FlashcardViewFragment extends Fragment {
     private String setTitle;
     private List<String> frontTexts;
     private List<String> backTexts;
+    private List<String> imageBase64List;
+    private int currentSetIndex = 0;
     private int currentCardIndex = 0;
     private int numberOfCards = 0;
     private boolean isFront = true;
@@ -28,7 +34,8 @@ public class FlashcardViewFragment extends Fragment {
     private TextView titleText;
     private TextView cardText;
     private TextView cardTextBack;
-    private Button exitButton;
+    private ImageView cardImage;
+    private Button editButton;
     private Button prevButton;
     private Button nextButton;
     private Button flipButton;
@@ -51,7 +58,8 @@ public class FlashcardViewFragment extends Fragment {
         titleText = rootView.findViewById(R.id.flashcardViewTitle);
         cardText = rootView.findViewById(R.id.flashcardViewText);
         cardTextBack = rootView.findViewById(R.id.flashcardViewTextBack);
-        exitButton = rootView.findViewById(R.id.flashcardViewExitButton);
+        cardImage = rootView.findViewById(R.id.flashcardViewImage);
+        editButton = rootView.findViewById(R.id.flashcardViewEditButton);
         prevButton = rootView.findViewById(R.id.flashcardViewPrevButton);
         nextButton = rootView.findViewById(R.id.flashcardViewNextButton);
         flipButton = rootView.findViewById(R.id.flashcardViewFlipButton);
@@ -61,12 +69,14 @@ public class FlashcardViewFragment extends Fragment {
         // init array lists
         frontTexts = new ArrayList<>();
         backTexts = new ArrayList<>();
+        imageBase64List = new ArrayList<>();
 
         // read FlashCardTempPrefs shared preferences
 
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("FlashCardSetTempPrefs", 0);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         String setID = sharedPreferences.getString("set_id", "");
+        currentSetIndex = Integer.parseInt(setID);
         setTitle = sharedPreferences.getString("set_title", "");
         int setCount = sharedPreferences.getInt("set_count", 0);
         long setDatetime = sharedPreferences.getLong("set_datetime", 0);
@@ -81,6 +91,7 @@ public class FlashcardViewFragment extends Fragment {
             String back = sharedPreferences.getString("set_" + setID + "_card_" + i + "_back", "");
             frontTexts.add(front);
             backTexts.add(back);
+            imageBase64List.add(sharedPreferences.getString("set_" + setID + "_card_" + i + "_image", ""));
             Log.d("FlashcardViewFragment", "Loaded card " + front + " from SharedPreferences.");
         }
 
@@ -88,17 +99,46 @@ public class FlashcardViewFragment extends Fragment {
         titleText.setText(String.format("%s %d/%d", setTitle, currentCardIndex + 1, numberOfCards));
         cardText.setText(frontTexts.get(0));
         cardTextBack.setText(backTexts.get(0));
+        try{
+            // https://stackoverflow.com/questions/13562429/how-many-ways-to-convert-bitmap-to-string-and-vice-versa
+            byte[] encodeByte = Base64.decode(imageBase64List.get(0), Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            cardImage.setImageBitmap(bitmap);
+        } catch (Exception e) {
+            Log.d("FlashcardViewFragment", "Failed to load image: " + e.getMessage());
+        }
 
-        cardText.setOnClickListener(new View.OnClickListener() {
+
+        cardText.setOnTouchListener(new OnSwipeTouchListener(requireContext()) {
             @Override
-            public void onClick(View v) {
+            public void onSwipeLeft() {
+                nextCard();
+            }
+
+            @Override
+            public void onSwipeRight() {
+                prevCard();
+            }
+
+            @Override
+            public void onSingleTap() {
                 flipCardWithAnimation();
             }
         });
 
-        cardTextBack.setOnClickListener(new View.OnClickListener() {
+        cardTextBack.setOnTouchListener(new OnSwipeTouchListener(requireContext()) {
             @Override
-            public void onClick(View v) {
+            public void onSwipeLeft() {
+                nextCard();
+            }
+
+            @Override
+            public void onSwipeRight() {
+                prevCard();
+            }
+
+            @Override
+            public void onSingleTap() {
                 flipCardWithAnimation();
             }
         });
@@ -106,11 +146,21 @@ public class FlashcardViewFragment extends Fragment {
 
     private void setupButtons(View rootView) {
         // Setup the buttons
-        exitButton.setOnClickListener(new View.OnClickListener() {
+        editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainActivity activity = (MainActivity) requireActivity();
-                activity.NavigateToFragmentByFragment(new FlashcardMainFragment());
+                // Navigate back to the FlashcardMainFragment
+//                MainActivity activity = (MainActivity) requireActivity();
+//                activity.NavigateToFragmentByFragment(new FlashcardMainFragment());
+
+                // Edit button, navigate to FlashcardCreateFragment
+                FlashcardCreateFragment fragment = new FlashcardCreateFragment();
+                Bundle bundle = new Bundle();
+                bundle.putInt("setIndex", currentSetIndex);
+                fragment.setArguments(bundle);
+
+                MainActivity mainActivity = (MainActivity) requireActivity();
+                mainActivity.NavigateToFragmentByFragment(fragment);
             }
         });
 
@@ -271,6 +321,32 @@ public class FlashcardViewFragment extends Fragment {
                         cardText.setTranslationX(direction == Direction.LEFT ? cardText.getWidth() : -cardText.getWidth());
                         cardText.animate().translationX(0).setDuration(200).start();
 
+                    }
+                }).start();
+
+        cardImage.animate()
+                .translationX(direction == Direction.LEFT ? -cardImage.getWidth() : cardImage.getWidth())
+                .setDuration(200)
+                .withEndAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        cardImage.setTranslationX(0);
+                        cardImage.setVisibility(View.GONE);
+
+//                        Uri imageUri = Uri.parse(imageBase64List.get(currentCardIndex));
+//                        cardImage.setImageURI(imageUri);
+                        try{
+                            // https://stackoverflow.com/questions/13562429/how-many-ways-to-convert-bitmap-to-string-and-vice-versa
+                            byte[] encodeByte = Base64.decode(imageBase64List.get(currentCardIndex), Base64.DEFAULT);
+                            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+                            cardImage.setImageBitmap(bitmap);
+                        } catch (Exception e) {
+                            Log.d("FlashcardViewFragment", "Failed to load image: " + e.getMessage());
+                        }
+
+                        cardImage.setVisibility(View.VISIBLE);
+                        cardImage.setTranslationX(direction == Direction.LEFT ? cardImage.getWidth() : -cardImage.getWidth());
+                        cardImage.animate().translationX(0).setDuration(200).start();
                     }
                 }).start();
     }
