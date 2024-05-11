@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             else if (getSupportFragmentManager().findFragmentById(R.id.fragment_container).getClass() == FlashcardViewFragment.class) {
                 NavigateToFragmentByNavID(R.id.nav_flashcard);
             }
-// if current fragment is write create, go back to write main
+            // if current fragment is write create, go back to write main
             else if (getSupportFragmentManager().findFragmentById(R.id.fragment_container).getClass() == WriteCreateFragment.class) {
                 NavigateToFragmentByNavID(R.id.nav_write);
             }
@@ -111,6 +111,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     new FlashcardMainFragment()).commit();
 //            navigationView.setCheckedItem(R.id.nav_flashcard);
             getSupportActionBar().setTitle("Flashcard");
+        } else if (id == R.id.nav_ai) {
+            Log.d("MainActivity", "AI clicked");
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    new AiMainFragment()).commit();
+//            navigationView.setCheckedItem(R.id.nav_ai);
+            getSupportActionBar().setTitle("AI");
         }
 
         else {

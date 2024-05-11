@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -52,12 +53,23 @@ public class WriteCreateFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_write_create, container, false);
 
         Button saveButton = rootView.findViewById(R.id.writeButtonSave);
+        Button checkButton = rootView.findViewById(R.id.writeButtonCheck);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 saveNote();
+                // Navigate back to WriteMainFragment
+                requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new WriteMainFragment()).commit();
             }
         });
+        checkButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveAndNavigateToAiFragment();
+            }
+        });
+
         if (noteIndex == -1) {
             currentNote = new Note();
         }
@@ -83,6 +95,24 @@ public class WriteCreateFragment extends Fragment {
         return rootView;
     }
 
+    private void saveAndNavigateToAiFragment() {
+        EditText contentEditText = requireView().findViewById(R.id.writeEditTextContent);
+        String content = contentEditText.getText().toString();
+        if (content.isEmpty()) {
+            Toast.makeText(requireContext(), "Please enter a content", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        saveNote();
+
+        AiMainFragment aiMainFragment = new AiMainFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("content", content);
+        aiMainFragment.setArguments(bundle);
+
+        MainActivity mainActivity = (MainActivity) requireActivity();
+        mainActivity.NavigateToFragmentByFragment(aiMainFragment);
+    }
+
     private void saveNote() {
         EditText titleEditText = requireView().findViewById(R.id.writeEditTextTitle);
         EditText contentEditText = requireView().findViewById(R.id.writeEditTextContent);
@@ -91,22 +121,28 @@ public class WriteCreateFragment extends Fragment {
         String content = contentEditText.getText().toString();
         long datetime = System.currentTimeMillis();
 
-        if (!title.isEmpty() && !content.isEmpty()) {
-            Note note = new Note();
-            note.setTitle(title);
-            note.setContent(content);
-            note.setDatetime(datetime);
-
-            currentNote = note;
-            saveNotesToPreferences(editMode);
-
-            clearInputFields();
+        if (title.isEmpty() && content.isEmpty()) {
+            return;
         }
-        Log.d("WriteCreateFragment", "Saved Note: " + title + " - " + content);
 
-        // Navigate back to WriteMainFragment
-        requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                new WriteMainFragment()).commit();
+        if (title.isEmpty()) {
+            title = "Untitled";
+        }
+        if (content.isEmpty()) {
+            content = "No content";
+        }
+
+        Note note = new Note();
+        note.setTitle(title);
+        note.setContent(content);
+        note.setDatetime(datetime);
+
+        currentNote = note;
+        saveNotesToPreferences(editMode);
+
+        clearInputFields();
+
+        Log.d("WriteCreateFragment", "Saved Note: " + title + " - " + content);
     }
 
     private void clearInputFields() {

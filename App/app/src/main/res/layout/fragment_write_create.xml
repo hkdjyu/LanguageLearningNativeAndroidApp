@@ -66,17 +66,37 @@
             android:scrollbars="vertical"
             android:gravity="top"/>
 
-        <Button
-            android:id="@+id/writeButtonSave"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="20dp"
-            android:layout_gravity="center"
-            android:text="SAVE"
-            style="@style/Button1"/>
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_margin="10dp">
+            <Button
+                android:id="@+id/writeButtonCheck"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="20dp"
+                android:layout_gravity="center"
+                android:text="CHECK"
+                style="@style/Button2"/>
+            <Button
+                android:id="@+id/writeButtonSave"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="20dp"
+                android:layout_gravity="center"
+                android:text="SAVE"
+                style="@style/Button1"/>
+        </LinearLayout>
+
+
 
     </LinearLayout>
 
