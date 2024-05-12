@@ -2,6 +2,74 @@
     <string name="app_name">CSCI3310Project</string>
     <string name="open_nav">Open Navigation</string>
     <string name="close_nav">Close Navigation</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="close_button">Close</string>
+    <string name="frontText">Front</string>
+    <string name="backText">Back</string>
+    <string name="view">View</string>
+    <string name="add">Add</string>
+    <string name="change_photo">Change</string>
+    <string name="clear_chat">Clear Chat</string>
+    <string name="ai_input_hint">Type your message here...</string>
+    <string name="ask">Ask</string>
+    <string name="create_set">Create a Set</string>
+    <string name="title">Title</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="flashcard">Flashcard</string>
+    <string name="search">search</string>
+    <string name="sort">Sort by</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="previous">PREV</string>
+    <string name="next">NEXT</string>
+    <string name="submit">Submit</string>
+    <string name="create_quiz">Create a Quiz</string>
+    <string name="number_of_questions">Number of Questions</string>
+    <string name="keyword">keyword</string>
+    <string name="quiz">Quiz</string>
+    <string name="write">Write</string>
+    <string name="write_input_hint">Type your content here...</string>
+    <string name="check">Check</string>
+    <string name="article">Article</string>
+    <string name="hello_exclamation">Hello!</string>
+    <string name="send">Send</string>
+    <string name="summarize">Summarize</string>
+
+    <string name="home">Home</string>
+    <string name="settings">Settings</string>
+    <string name="ai">AI</string>
+
+    <string name="language">Language</string>
+    <string name="google_gemini_api_key">Google Gemini API Key</string>
+    <string name="ai_generating_response">generating response...</string>
+
+    <string name="fail_to_generate_response">Failed to generate response</string>
+    <string name="fail_to_copy_message">Failed to copy message</string>
+    <string name="message_copied_to_clipboard">Message copied to clipboard</string>
+    <string name="please_enter_a_title">Please enter a title</string>
+    <string name="please_enter_a_message">Please enter a message</string>
+
+    <string name="are_you_sure">Are you sure you want to perform this action?</string>
+    <string name="confirm">Confirm</string>
+    <string name="title_cannot_be_empty">Title cannot be empty</string>
+    <string name="flashcard_set_cannot_be_empty">Flashcard cannot be empty</string>
+    <string name="select_photo_first">Please select a photo first</string>
+    <string name="no_available_quiz">No available quiz</string>
+    <string name="no_available_flashcard_set">No available flashcard set</string>
+    <string name="delete_flashcard_set">Delete Flashcard Set</string>
+    <string name="enter_maximum_number_of_questions">Enter maximum number of questions</string>
+    <string name="the_maximum_number_of_flashcard_is">The maximum number of flashcards is</string>
+
+    <string name="delete_quiz">Delete Quiz</string>
+    <string name="please_enter_a_content">Please enter a content</string>
+    <string name="delete_note">Delete Note</string>
+    <string name="please_enter_a_valid_api_key">Please enter a valid API key</string>
+    <string name="fail_to_setup_model">Failed to setup Gemini model</string>
+    <string name="developerMode">Developer Mode</string>
+    <string name="import_default_data">Import Default Data</string>
+    <string name="import_text">Import</string>
+    <string name="clear">Clear</string>
+    <string name="clear_all_data">Clear All Data</string>
+
+
 </resources>

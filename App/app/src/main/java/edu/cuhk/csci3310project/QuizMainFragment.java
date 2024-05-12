@@ -194,19 +194,27 @@ public class QuizMainFragment extends Fragment implements AdapterView.OnItemSele
     private void NavigateToQuizAttemptFragment(QuizSet set) {
         // TODO: Implement this method
         // Navigate to the quiz attempt fragment
+
+        QuizAttemptFragment fragment = new QuizAttemptFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt("questionSetIndex", setList.indexOf(set));
+        fragment.setArguments(bundle);
+
+        MainActivity activity = (MainActivity) requireActivity();
+        activity.NavigateToFragmentByFragment(fragment);
     }
 
     private void showDeleteSetDialog(QuizSet set) {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        builder.setTitle("Delete Set");
-        builder.setMessage("Are you sure you want to delete\n" + set.getTitle() + "?");
-        builder.setPositiveButton("Delete", (dialog, which) -> {
+        builder.setTitle(R.string.delete_quiz);
+        builder.setMessage(getString(R.string.are_you_sure) + "\n" + getString(R.string.delete) + " " + set.getTitle());
+        builder.setPositiveButton(R.string.delete, (dialog, which) -> {
             // Delete the set
             setList.remove(set);
             saveSetListToPreferences();
             updateDisplayingSetContainer();
         });
-        builder.setNegativeButton("Cancel", (dialog, which) -> {
+        builder.setNegativeButton(R.string.cancel, (dialog, which) -> {
             // Do nothing
         });
         builder.show();

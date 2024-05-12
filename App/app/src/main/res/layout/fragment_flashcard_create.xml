@@ -22,7 +22,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
-            android:text="Create a Set"
+            android:text="@string/create_set"
             style="@style/TitleText1"/>
 
         <EditText
@@ -33,7 +33,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
-            android:hint="Title"
+            android:hint="@string/title"
             android:inputType="text"
             style="@style/OneLineEditText"/>
 
@@ -91,7 +91,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_weight="1"
-                android:text="CANCEL"
+                android:text="@string/cancel"
                 style="@style/Button2"/>
 
             <Button
@@ -102,7 +102,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_weight="1"
-                android:text="SAVE"
+                android:text="@string/save"
                 style="@style/Button1"/>
 
         </LinearLayout>

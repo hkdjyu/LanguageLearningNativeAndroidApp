@@ -23,7 +23,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
-            android:text="Create a Quiz" />
+            android:text="@string/create_quiz" />
 
         <EditText
             android:id="@+id/quizCreateEditTextTitle"
@@ -34,7 +34,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
-            android:hint="Title"
+            android:hint="@string/title"
             android:inputType="text" />
 
 
@@ -63,7 +63,7 @@
                     android:layout_gravity="start"
                     android:gravity="center_vertical"
                     style="@style/PrimaryText"
-                    android:text="Number of Questions:" />
+                    android:text="@string/number_of_questions" />
             </LinearLayout>
 
             <LinearLayout
@@ -95,7 +95,7 @@
             android:layout_marginEnd="10dp"
             android:layout_below="@+id/quizCreateLinearLayoutNumberOfQuestions"
             android:layout_marginBottom="10dp"
-            android:hint="search flashcard sets"
+            android:hint="@string/keyword"
             android:inputType="text"
             style="@style/SearchEditText"
             />
@@ -115,7 +115,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="3dp"
-                android:text="sort by:"
+                android:text="@string/sort"
                 style="@style/PrimaryText"/>
 
             <Spinner
@@ -173,7 +173,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_weight="1"
-                android:text="CANCEL"
+                android:text="@string/cancel"
                 style="@style/Button2"/>
 
             <Button
@@ -184,7 +184,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_weight="1"
-                android:text="SAVE"
+                android:text="@string/save"
                 style="@style/Button1"/>
 
         </LinearLayout>

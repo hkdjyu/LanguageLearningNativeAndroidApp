@@ -5,6 +5,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
@@ -43,6 +44,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Executor;
 
 /*
@@ -59,6 +61,7 @@ public class AiMainFragment extends Fragment implements AdapterView.OnItemSelect
     private static final String TAG = "AiMainFragment";
     private static final String PREFS_NAME = "MessagePrefs";
     private static final String KEY_MESSAGE_COUNT = "MessageCount";
+    private static final String DEFAULT_API_KEY = "AIzaSyCtBVpBfa_18IEaNLuSHFK2nY499MVNqHo";
 
     private String selectedLanguage = "繁體中文";
     private mode currentMode = mode.FREE;
@@ -72,6 +75,7 @@ public class AiMainFragment extends Fragment implements AdapterView.OnItemSelect
     private List<ChatMessage> messageList;
 
     private String initialMessage = "";
+    private String apiKey = "";
 
     public AiMainFragment() {
         // Required empty public constructor
@@ -118,15 +122,15 @@ public class AiMainFragment extends Fragment implements AdapterView.OnItemSelect
         switch (i) {
             case 0:
                 currentMode = mode.FREE;
-                generateButton.setText("SEND");
+                generateButton.setText(R.string.send);
                 break;
             case 1:
                 currentMode = mode.PROOFREADING;
-                generateButton.setText("PROOFREAD");
+                generateButton.setText(R.string.check);
                 break;
             case 2:
                 currentMode = mode.SUMMARIZATION;
-                generateButton.setText("SUMMARIZE");
+                generateButton.setText(R.string.summarize);
                 break;
         }
     }
@@ -137,14 +141,33 @@ public class AiMainFragment extends Fragment implements AdapterView.OnItemSelect
     }
 
     private void setupModel() {
-        // Use a model that's applicable for your use case (see "Implement basic use cases" below)
-        GenerativeModel gm = new GenerativeModel(/* modelName */ "gemini-pro",
-        // Access your API key as a Build Configuration variable (see "Set up your API key" above)
-                        /* apiKey */ "AIzaSyCtBVpBfa_18IEaNLuSHFK2nY499MVNqHo");
+        // get the API key from the shared preferences
+        SharedPreferences prefs = requireActivity().getSharedPreferences("settingsPrefs", 0);
 
-        // Use the GenerativeModelFutures Java compatibility layer which offers
-        // support for ListenableFuture and Publisher APIs
-        model = GenerativeModelFutures.from(gm);
+        boolean isDevMode = prefs.getBoolean("developerMode", false);
+        if (isDevMode) {
+            apiKey = DEFAULT_API_KEY;
+        } else {
+            apiKey = prefs.getString("geminiAPIKey", "");
+            if (apiKey.isEmpty()) {
+                apiKey = DEFAULT_API_KEY;
+            }
+        }
+
+        try{
+            // Use a model that's applicable for your use case (see "Implement basic use cases" below)
+            GenerativeModel gm = new GenerativeModel(/* modelName */ "gemini-pro",
+                    // Access your API key as a Build Configuration variable (see "Set up your API key" above)
+                    /* apiKey */ apiKey);
+
+            // Use the GenerativeModelFutures Java compatibility layer which offers
+            // support for ListenableFuture and Publisher APIs
+            model = GenerativeModelFutures.from(gm);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(getContext(), R.string.fail_to_setup_model, Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     private void bindViews(View rootView) {
@@ -181,9 +204,9 @@ public class AiMainFragment extends Fragment implements AdapterView.OnItemSelect
 
     private void showClearDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        builder.setTitle("Clear chat.");
-        builder.setMessage("Are you sure you want to clear chats?");
-        builder.setPositiveButton("Clear", new DialogInterface.OnClickListener() {
+        builder.setTitle(R.string.clear_chat);
+        builder.setMessage(R.string.are_you_sure);
+        builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 outputContainer.removeAllViews();
@@ -193,14 +216,14 @@ public class AiMainFragment extends Fragment implements AdapterView.OnItemSelect
             }
         });
 
-        builder.setNegativeButton("Cancel", null);
+        builder.setNegativeButton(R.string.cancel, null);
         builder.show();
     }
 
     private void generateResponse() {
 
         if (inputText.getText().toString().isEmpty()) {
-            Toast.makeText(getContext(), "Please enter a message", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.please_enter_a_message, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -217,6 +240,12 @@ public class AiMainFragment extends Fragment implements AdapterView.OnItemSelect
         messageList.add(chatMessage);
         createMessageView(chatMessage);
         Content.Builder contentBuilder = new Content.Builder();
+
+        // get language from shared preferences
+        SharedPreferences prefs = requireActivity().getSharedPreferences("settingsPrefs", 0);
+        selectedLanguage = prefs.getString("language", "ENGLISH");
+        selectedLanguage = Objects.requireNonNull(AppLanguage.fromCode(selectedLanguage)).name();
+
         String prompt = "Generate a response in " + selectedLanguage + ".\n";
 
         switch (currentMode) {
@@ -240,7 +269,8 @@ public class AiMainFragment extends Fragment implements AdapterView.OnItemSelect
         ListenableFuture<GenerateContentResponse> response = chatModel.sendMessage(content);
 
         // Generate temporary response
-        ChatMessage tempChatMessage = new ChatMessage("model", "generating response...", String.valueOf(System.currentTimeMillis()));
+        String tempResponse = getString(R.string.ai_generating_response);
+        ChatMessage tempChatMessage = new ChatMessage("model", tempResponse, String.valueOf(System.currentTimeMillis()));
         messageList.add(tempChatMessage);
         createMessageView(tempChatMessage);
 
@@ -261,7 +291,7 @@ public class AiMainFragment extends Fragment implements AdapterView.OnItemSelect
             @Override
             public void onFailure(Throwable t) {
                 t.printStackTrace();
-                Toast.makeText(getContext(), "Failed to generate response", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.fail_to_generate_response, Toast.LENGTH_SHORT).show();
 
                 // remove the temporary response
                 messageList.remove(tempChatMessage);
@@ -382,10 +412,10 @@ public class AiMainFragment extends Fragment implements AdapterView.OnItemSelect
 
                     ClipData clip = ClipData.newPlainText("simple text", text);
                     clipboard.setPrimaryClip(clip);
-                    Toast.makeText(getContext(), "Message copied to clipboard", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.message_copied_to_clipboard, Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(getContext(), "Failed to copy message to clipboard", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.fail_to_copy_message, Toast.LENGTH_SHORT).show();
 
                 }
             }

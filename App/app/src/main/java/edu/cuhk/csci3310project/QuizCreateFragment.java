@@ -19,8 +19,6 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
-import org.w3c.dom.Text;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,7 +36,7 @@ public class QuizCreateFragment extends Fragment implements AdapterView.OnItemSe
     private static final String CARD_KEY_COUNT = "CardCount";
     private static final String SET_PREFS_NAME = "SetPrefs";
     private static final String SET_KEY_COUNT = "SetCount";
-    private static final String MAX_FLASHCARDS_TEXT_PREFIX = "Number of cards ";
+    private String maxFlashcardsTextPrefix = "Number of cards ";
 
     private LinearLayout setsContainer;
     private TextView maxFlashcardsTextView;
@@ -106,12 +104,14 @@ public class QuizCreateFragment extends Fragment implements AdapterView.OnItemSe
         // Setup Save and Cancel buttons
         rootView.findViewById(R.id.quizCreateSaveButton).setOnClickListener(v -> {
             // Save the quiz
-            saveQuizSet();
+            boolean result = saveQuizSet();
             // Go back to the previous fragment
 
             // TODO: Navigate to the quiz fragment
-            MainActivity mainActivity = (MainActivity) requireActivity();
-            mainActivity.NavigateToFragmentByFragment(new QuizMainFragment());
+            if (result) {
+                MainActivity mainActivity = (MainActivity) requireActivity();
+                mainActivity.NavigateToFragmentByFragment(new QuizMainFragment());
+            }
         });
 
         rootView.findViewById(R.id.quizCreateCancelButton).setOnClickListener(v -> {
@@ -216,7 +216,8 @@ public class QuizCreateFragment extends Fragment implements AdapterView.OnItemSe
             if (isChecked) {
                 // Add the set to the quiz
                 selectedFlashcardSetList.add(cardSet);
-                maxFlashcardsTextView.setText(String.format("%s (max:%d)", MAX_FLASHCARDS_TEXT_PREFIX, getMaximumFlashcards()));
+                maxFlashcardsTextPrefix = getString(R.string.number_of_questions);
+                maxFlashcardsTextView.setText(String.format("%s (max:%d)", maxFlashcardsTextPrefix, getMaximumFlashcards()));
             } else {
                 // Remove the set from the quiz
                 if (selectedFlashcardSetList.contains(cardSet)) {
@@ -227,10 +228,10 @@ public class QuizCreateFragment extends Fragment implements AdapterView.OnItemSe
         return cardSetView;
     }
 
-    private void saveQuizSet() {
+    private boolean saveQuizSet() {
         // Save the quiz set to SharedPreferences
         if (!canSave()) {
-            return;
+            return false;
         }
 
         String quizSetSetID;
@@ -302,6 +303,8 @@ public class QuizCreateFragment extends Fragment implements AdapterView.OnItemSe
         }
         editor.apply();
         Log.d(TAG, "Quiz set saved");
+
+        return true;
     }
 
     private void loadFlashcardSetsFromPreferences() {
@@ -329,21 +332,21 @@ public class QuizCreateFragment extends Fragment implements AdapterView.OnItemSe
 
     private boolean canSave() {
         if (titleEditText.getText().toString().isEmpty()) {
-            Toast.makeText(requireContext(), "Please enter a title for the quiz", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), R.string.title_cannot_be_empty, Toast.LENGTH_SHORT).show();
             return false;
         }
         if (selectedFlashcardSetList.size() == 0) {
-            Toast.makeText(requireContext(), "Please select at least one flashcard set", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), R.string.flashcard_set_cannot_be_empty, Toast.LENGTH_SHORT).show();
             return false;
         }
         if (maxFlashcardsEditText.getText().toString().isEmpty()) {
-            Toast.makeText(requireContext(), "Please enter the maximum number of flashcards", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), R.string.enter_maximum_number_of_questions, Toast.LENGTH_SHORT).show();
             return false;
         }
         int userSelectedFlashcardCount = Integer.parseInt(maxFlashcardsEditText.getText().toString());
         int maximumFlashcards = getMaximumFlashcards();
         if (userSelectedFlashcardCount > maximumFlashcards) {
-            Toast.makeText(requireContext(), "The maximum number of flashcards is " + maximumFlashcards, Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), R.string.the_maximum_number_of_flashcard_is + maximumFlashcards, Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;

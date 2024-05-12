@@ -76,7 +76,7 @@ public class FlashcardCreateFragment extends Fragment {
 
                     // Change text on the button to "Change photo"
                     Button addButton = requireView().findViewById(R.id.flashcard_create_add_photo_button * 10 + editingCard.getSetID());
-                    addButton.setText("CHANGE");
+                    addButton.setText(R.string.change_photo);
 
                 } else {
                     Log.d("PhotoPicker", "No media selected");
@@ -228,12 +228,12 @@ public class FlashcardCreateFragment extends Fragment {
         // Save the flashcard
         EditText title = requireView().findViewById(R.id.createCardEditTextTitle);
         if (title.getText().toString().isEmpty()) {
-            Toast toast = Toast.makeText(requireContext(), "Title cannot be empty", Toast.LENGTH_SHORT);
+            Toast toast = Toast.makeText(requireContext(), R.string.title_cannot_be_empty, Toast.LENGTH_SHORT);
             toast.show();
             return;
         }
         if (cardList.isEmpty()) {
-            Toast toast = Toast.makeText(requireContext(), "Card cannot be empty", Toast.LENGTH_SHORT);
+            Toast toast = Toast.makeText(requireContext(), R.string.flashcard_set_cannot_be_empty, Toast.LENGTH_SHORT);
             toast.show();
             return;
         }
@@ -412,7 +412,7 @@ public class FlashcardCreateFragment extends Fragment {
         if (!image.isEmpty()) {
 //            imageBase64List.add(image);
             myCard.setImage(image);
-            addButton.setText("CHANGE");
+            addButton.setText(R.string.change_photo);
         } else {
 //            imageBase64List.add("");
         }
@@ -517,15 +517,8 @@ public class FlashcardCreateFragment extends Fragment {
     }
 
     private void viewPhoto(View v, int cardIndex, Flashcard card) {
-//        Log.d(TAG, "imageBase64List.length: " + imageBase64List.size());
-//        Log.d(TAG, "imageBase64List.get(cardIndex).length(): " + imageBase64List.get(cardIndex).length());
-//        if (imageBase64List.get(cardIndex).isEmpty()) {
-//            Toast toast = Toast.makeText(requireContext(), "No photo added", Toast.LENGTH_SHORT);
-//            toast.show();
-//            return;
-//        }
         if (card.getImage().isEmpty()) {
-            Toast toast = Toast.makeText(requireContext(), "No photo added", Toast.LENGTH_SHORT);
+            Toast toast = Toast.makeText(requireContext(), R.string.select_photo_first, Toast.LENGTH_SHORT);
             toast.show();
             return;
         }

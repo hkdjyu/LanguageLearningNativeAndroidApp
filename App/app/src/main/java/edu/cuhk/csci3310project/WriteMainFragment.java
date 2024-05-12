@@ -210,16 +210,16 @@ public class WriteMainFragment extends Fragment implements AdapterView.OnItemSel
 
     private void showDeleteDialog(final Note note) {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        builder.setTitle("Delete this note.");
-        builder.setMessage("Are you sure you want to delete\n" + note.getTitle() + "?");
-        builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+        builder.setTitle(R.string.delete_note);
+        builder.setMessage(getString(R.string.are_you_sure) + "\n" + getString(R.string.delete) + " " + note.getTitle());
+        builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 deleteNoteAndRefresh(note);
             }
         });
 
-        builder.setNegativeButton("Cancel", null);
+        builder.setNegativeButton(R.string.cancel, null);
         builder.show();
     }
 

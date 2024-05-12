@@ -28,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/flashcard_create_front"
-            android:hint="Front"
+            android:hint="@string/frontText"
             android:textSize="18sp"
             android:layout_marginBottom="8dp"/>
 
@@ -36,7 +36,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/flashcard_create_back"
-            android:hint="Back"
+            android:hint="@string/backText"
             android:textSize="18sp"
             android:layout_marginBottom="8dp"/>
 
@@ -52,7 +52,7 @@
                 android:layout_height="match_parent"
                 android:id="@+id/flashcard_create_view_photo_button"
                 android:layout_weight="1"
-                android:text="View"
+                android:text="@string/view"
                 android:textSize="18sp"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
@@ -63,7 +63,7 @@
                 android:layout_height="match_parent"
                 android:id="@+id/flashcard_create_add_photo_button"
                 android:layout_weight="1"
-                android:text="Add Photo"
+                android:text="@string/add"
                 android:textSize="18sp"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"

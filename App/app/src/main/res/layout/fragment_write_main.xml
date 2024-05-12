@@ -25,7 +25,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
-        android:text="Article"
+        android:text="@string/article"
         style="@style/TitleText1"/>
 
     <EditText
@@ -37,7 +37,7 @@
         android:layout_marginEnd="10dp"
         android:layout_below="@+id/writeEdit"
         android:layout_marginBottom="10dp"
-        android:hint="search"
+        android:hint="@string/search"
         android:inputType="text"
         style="@style/SearchEditText"
         />
@@ -57,7 +57,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="3dp"
-            android:text="sort by:"
+            android:text="@string/sort"
             style="@style/PrimaryText"/>
 
         <Spinner
@@ -101,7 +101,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ADD"
+            android:text="@string/add"
             android:id="@+id/writeButtonAdd"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
@@ -109,15 +109,5 @@
             style="@style/Button1"/>
 
     </LinearLayout>
-
-
-
-
-
-
-
-
-
-
 
 </RelativeLayout>

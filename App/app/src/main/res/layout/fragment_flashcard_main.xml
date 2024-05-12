@@ -15,7 +15,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
-        android:text="Flashcard"
+        android:text="@string/flashcard"
         style="@style/TitleText1"/>
 
     <EditText
@@ -27,7 +27,7 @@
         android:layout_marginEnd="10dp"
         android:layout_below="@+id/fmTitle"
         android:layout_marginBottom="10dp"
-        android:hint="search"
+        android:hint="@string/search"
         android:inputType="text"
         style="@style/SearchEditText"
         />
@@ -47,7 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="3dp"
-            android:text="sort by:"
+            android:text="@string/sort"
             style="@style/PrimaryText"/>
 
         <Spinner
@@ -72,8 +72,7 @@
         <ScrollView
             android:id="@+id/fmScrollView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/fmSortLinearLayout"
+            android:layout_height="0dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
@@ -91,7 +90,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ADD"
+            android:text="@string/add"
             android:id="@+id/fmAddButton"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"

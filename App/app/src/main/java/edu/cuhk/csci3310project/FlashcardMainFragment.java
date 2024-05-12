@@ -100,7 +100,7 @@ public class FlashcardMainFragment extends Fragment implements AdapterView.OnIte
     private void openRandomSet() {
         // Open a random flashcard set
         if (setList.isEmpty()) {
-            Toast toast = Toast.makeText(requireContext(), "No flashcard sets available.", Toast.LENGTH_SHORT);
+            Toast toast = Toast.makeText(requireContext(), R.string.no_available_flashcard_set, Toast.LENGTH_SHORT);
             toast.show();
             return;
         }
@@ -235,16 +235,16 @@ public class FlashcardMainFragment extends Fragment implements AdapterView.OnIte
     private void showDeleteDialog(FlashcardSet set) {
         // Show a dialog to confirm deletion of the flashcard set
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        builder.setTitle("Delete Set");
-        builder.setMessage("Are you sure you want to delete\n" + set.getTitle() + "?");
-        builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+        builder.setTitle(R.string.delete_flashcard_set);
+        builder.setMessage(getString(R.string.are_you_sure) + "\n" + getString(R.string.delete) + " " + set.getTitle());
+        builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 deleteSetAndRefresh(set);
             }
         });
 
-        builder.setNegativeButton("Cancel", null);
+        builder.setNegativeButton(R.string.cancel, null);
         builder.show();
     }
 

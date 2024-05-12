@@ -99,7 +99,7 @@ public class WriteCreateFragment extends Fragment {
         EditText contentEditText = requireView().findViewById(R.id.writeEditTextContent);
         String content = contentEditText.getText().toString();
         if (content.isEmpty()) {
-            Toast.makeText(requireContext(), "Please enter a content", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), R.string.please_enter_a_content, Toast.LENGTH_SHORT).show();
             return;
         }
         saveNote();

@@ -25,7 +25,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
-        android:text="Write"
+        android:text="@string/write"
         style="@style/TitleText1"/>
 
     <LinearLayout
@@ -46,7 +46,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
-            android:hint="Title"
+            android:hint="@string/title"
             android:inputType="text"
             android:singleLine="true" />
 
@@ -61,7 +61,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
-            android:hint="write something here..."
+            android:hint="@string/write_input_hint"
             android:inputType="textMultiLine"
             android:scrollbars="vertical"
             android:gravity="top"/>
@@ -81,7 +81,7 @@
                 android:layout_marginEnd="10dp"
                 android:layout_marginBottom="20dp"
                 android:layout_gravity="center"
-                android:text="CHECK"
+                android:text="@string/check"
                 style="@style/Button2"/>
             <Button
                 android:id="@+id/writeButtonSave"
@@ -92,7 +92,7 @@
                 android:layout_marginEnd="10dp"
                 android:layout_marginBottom="20dp"
                 android:layout_gravity="center"
-                android:text="SAVE"
+                android:text="@string/save"
                 style="@style/Button1"/>
         </LinearLayout>
 
