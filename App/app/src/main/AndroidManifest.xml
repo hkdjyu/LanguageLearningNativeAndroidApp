@@ -39,13 +39,7 @@
                 android:value="true" />
         </service>
 
-        <receiver
-            android:name=".AlarmReceiver"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.example.yourapp.NOTIFICATION_ACTION" />  </intent-filter>
-        </receiver>
+        <receiver android:name=".AlarmReceiver"/>
     </application>
 
 

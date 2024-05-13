@@ -14,6 +14,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -206,6 +207,22 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
     }
 
     private void setAlarm(){
+        // Schedule alarm
+        AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(getContext(), AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        // Calculate the time when the alarm should go off (current time + 5 seconds)
+        long triggerTime = SystemClock.elapsedRealtime() + 5000;
+
+        // Set the alarm
+        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerTime, pendingIntent);
+
+        Toast.makeText(requireActivity(), "Alarm set", Toast.LENGTH_SHORT).show();
+
+        return;
+
+        /*
         // validate time. format: HH:mm
         String time = timeEditText.getText().toString();
         if (time.isEmpty()){
@@ -238,6 +255,7 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
         prefs.edit().putString("alarmTime", time).apply();
         Toast.makeText(requireActivity(), R.string.alarm_set, Toast.LENGTH_SHORT).show();
         Log.d(TAG, "Alarm set at " + time);
+         */
     }
 
     private void cancelAlarm(){
