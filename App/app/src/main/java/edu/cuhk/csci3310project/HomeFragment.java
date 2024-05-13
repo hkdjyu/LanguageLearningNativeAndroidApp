@@ -44,6 +44,7 @@ public class HomeFragment extends Fragment {
     private EditText homeExplainEditText;
 
     private Button homeExplainButton;
+    private Button homeAksAiButton;
     private Button homeWriteButton;
     private Button homeViewFlashcardSetButton;
     private Button homeStartQuizButton;
@@ -67,6 +68,7 @@ public class HomeFragment extends Fragment {
         homeQuizDoneTextView = rootView.findViewById(R.id.homeQuizDoneTextView);
         homeExplainEditText = rootView.findViewById(R.id.homeExplainEditText);
         homeExplainButton = rootView.findViewById(R.id.homeExplainButton);
+        homeAksAiButton = rootView.findViewById(R.id.homeViewGoToAiButton);
         homeWriteButton = rootView.findViewById(R.id.homeWriteButton);
         homeViewFlashcardSetButton = rootView.findViewById(R.id.homeViewFlashcardSetButton);
         homeStartQuizButton = rootView.findViewById(R.id.homeStartQuizButton);
@@ -76,6 +78,12 @@ public class HomeFragment extends Fragment {
         homeExplainButton.setOnClickListener((View v) -> {
             // Translate the text in homeTranslateEditText
             translateText();
+        });
+        homeAksAiButton.setOnClickListener((View v) -> {
+            // Go to AiFragment
+            ((MainActivity) getActivity()).NavigateToFragmentByFragment(
+                    new AiMainFragment()
+            );
         });
         homeWriteButton.setOnClickListener((View v) -> {
             // Go to WriteFragment

@@ -14,6 +14,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -215,44 +216,51 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
             Toast.makeText(requireActivity(), R.string.invalid_time, Toast.LENGTH_SHORT).show();
             return;
         }
+        int hour = Integer.parseInt(time.split(":")[0]);
+        int minute = Integer.parseInt(time.split(":")[1]);
+        if (hour < 0 || hour > 23 || minute < 0 || minute > 59){
+            Toast.makeText(requireActivity(), R.string.invalid_time, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND, 0);
 
         alarmManager = (AlarmManager) requireActivity().getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(getContext(), AlarmReceiver.class);
-        pendingIntent = PendingIntent.getBroadcast(getContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE);
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(time.split(":")[0]));
-        calendar.set(Calendar.MINUTE, Integer.parseInt(time.split(":")[1]));
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-
+        Intent intent = new Intent(requireActivity(), AlarmReceiver.class);
+        pendingIntent = PendingIntent.getBroadcast(requireActivity(), 0, intent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
         alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+
 
         SharedPreferences prefs = requireActivity().getSharedPreferences(SETTINGS_PREFS_NAME, 0);
         prefs.edit().putString("alarmTime", time).apply();
-
         Toast.makeText(requireActivity(), R.string.alarm_set, Toast.LENGTH_SHORT).show();
+        Log.d(TAG, "Alarm set at " + time);
     }
 
     private void cancelAlarm(){
-        Intent intent = new Intent(getContext(), AlarmReceiver.class);
-        pendingIntent = PendingIntent.getBroadcast(getContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE);
+
+        Intent intent = new Intent(requireActivity(), AlarmReceiver.class);
+        pendingIntent = PendingIntent.getBroadcast(requireActivity(), 0, intent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
         if (alarmManager == null){
             alarmManager = (AlarmManager) requireActivity().getSystemService(Context.ALARM_SERVICE);
         }
         alarmManager.cancel(pendingIntent);
 
+
         SharedPreferences prefs = requireActivity().getSharedPreferences(SETTINGS_PREFS_NAME, 0);
         prefs.edit().remove("alarmTime").apply();
-
         Toast.makeText(requireActivity(), R.string.alarm_cancel, Toast.LENGTH_SHORT).show();
     }
 
     private void createNotificationChannel(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            CharSequence name = "akchannel";
+            CharSequence name = "channel";
             String desc = "Channel for Alarm Manager";
             int imp = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel channel = new NotificationChannel("androidknowledge", name, imp);
+            NotificationChannel channel = new NotificationChannel("myLanguageApp", name, imp);
             channel.setDescription(desc);
             NotificationManager notificationManager = requireActivity().getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);

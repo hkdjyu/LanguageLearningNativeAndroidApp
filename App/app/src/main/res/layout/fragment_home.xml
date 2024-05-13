@@ -214,6 +214,7 @@
 
             </LinearLayout>
 
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -234,6 +235,36 @@
                     android:text="@string/write_something" />
 
                 <Button
+                    android:id="@+id/homeViewGoToAiButton"
+                    style="@style/Button1"
+                    android:layout_width="110dp"
+                    android:layout_height="110dp"
+                    android:layout_margin="10dp"
+                    android:textAllCaps="false"
+                    android:text="@string/go_to_ai" />
+
+<!--                <Button-->
+<!--                    android:id="@+id/homeStartQuizButton"-->
+<!--                    style="@style/Button1"-->
+<!--                    android:layout_width="110dp"-->
+<!--                    android:layout_height="110dp"-->
+<!--                    android:layout_margin="10dp"-->
+<!--                    android:textAllCaps="false"-->
+<!--                    android:text="@string/start_a_quiz" />-->
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+                <Button
                     android:id="@+id/homeViewFlashcardSetButton"
                     style="@style/Button1"
                     android:layout_width="110dp"
@@ -248,8 +279,8 @@
                     android:layout_width="110dp"
                     android:layout_height="110dp"
                     android:layout_margin="10dp"
-                    android:textAllCaps="false"
-                    android:text="@string/start_a_quiz" />
+                    android:text="@string/start_a_quiz"
+                    android:textAllCaps="false" />
 
 
             </LinearLayout>

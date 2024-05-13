@@ -34,6 +34,7 @@
     <string name="hello_exclamation">Hello!</string>
     <string name="send">Send</string>
     <string name="summarize">Summarize</string>
+    <string name="go_to_ai">Ask AI Question</string>
 
     <string name="home">Home</string>
     <string name="settings">Settings</string>
@@ -90,7 +91,7 @@
     <string name="notification_title">Notification</string>
     <string name="notification_content">Time to start a quiz!</string>
     <string name="alarm_set">Alarm Set</string>
-    <string name="alarm_cancel">Alarm Set</string>
+    <string name="alarm_cancel">Alarm Cancelled</string>
     <string name="invalid_time">Invalid Time: Please enter a valid time (HH:mm)</string>
 
 
