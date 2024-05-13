@@ -1,7 +1,14 @@
 package edu.cuhk.csci3310project;
 
+import android.app.AlarmManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
@@ -13,9 +20,16 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.Toast;
+
+import com.google.android.material.timepicker.MaterialTimePicker;
+import com.google.android.material.timepicker.TimeFormat;
+
+import java.util.Calendar;
 
 public class SettingsFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
@@ -41,15 +55,20 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
     private static final String NOTE_PREFS_NAME = "NotePrefs";
     private static final String NOTE_COUNT_KEY = "NoteCount";
 
-
-
-
     private Spinner languageSpinner;
     private EditText geminiAPIKeyEditText;
     private Button importDefaultDataButton;
     private Button clearAllDataButton;
     private Switch developerModeSwitch;
     private Button saveButton;
+    private EditText timeEditText;
+    private CheckBox notificationCheckBox;
+
+
+    private boolean notificationEnabled = false;
+    private AlarmManager alarmManager;
+    private PendingIntent pendingIntent;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -57,6 +76,7 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_settings, container, false);
 
+        createNotificationChannel();
         bindViews(rootView);
         setupViews(rootView);
 
@@ -70,6 +90,8 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
         clearAllDataButton = rootView.findViewById(R.id.settingClearAllDataButton);
         developerModeSwitch = rootView.findViewById(R.id.settingDeveloperModeSwitch);
         saveButton = rootView.findViewById(R.id.settingSaveButton);
+        timeEditText = rootView.findViewById(R.id.settingTimeEditText);
+        notificationCheckBox = rootView.findViewById(R.id.settingNotificationCheckBox);
     }
 
     private void setupViews(View rootView) {
@@ -149,6 +171,20 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
             MainActivity mainActivity = (MainActivity) requireActivity();
             mainActivity.UpdateLanguage();
         });
+
+        notificationCheckBox.setOnCheckedChangeListener((compoundButton, isChecked) -> {
+            if (isChecked){
+                setAlarm();
+            } else {
+                cancelAlarm();
+            }
+        });
+
+        String alarmTime = requireActivity().getSharedPreferences(SETTINGS_PREFS_NAME, 0)
+                .getString("alarmTime", "");
+        timeEditText.setText(alarmTime);
+        notificationCheckBox.setChecked(!alarmTime.isEmpty());
+
     }
 
     @Override
@@ -167,6 +203,63 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
     public void onNothingSelected(AdapterView<?> adapterView) {
 
     }
+
+    private void setAlarm(){
+        // validate time. format: HH:mm
+        String time = timeEditText.getText().toString();
+        if (time.isEmpty()){
+            Toast.makeText(requireActivity(), R.string.invalid_time, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (!time.matches("([01]?[0-9]|2[0-3]):[0-5][0-9]")){
+            Toast.makeText(requireActivity(), R.string.invalid_time, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        alarmManager = (AlarmManager) requireActivity().getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(getContext(), AlarmReceiver.class);
+        pendingIntent = PendingIntent.getBroadcast(getContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(time.split(":")[0]));
+        calendar.set(Calendar.MINUTE, Integer.parseInt(time.split(":")[1]));
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+
+        SharedPreferences prefs = requireActivity().getSharedPreferences(SETTINGS_PREFS_NAME, 0);
+        prefs.edit().putString("alarmTime", time).apply();
+
+        Toast.makeText(requireActivity(), R.string.alarm_set, Toast.LENGTH_SHORT).show();
+    }
+
+    private void cancelAlarm(){
+        Intent intent = new Intent(getContext(), AlarmReceiver.class);
+        pendingIntent = PendingIntent.getBroadcast(getContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE);
+        if (alarmManager == null){
+            alarmManager = (AlarmManager) requireActivity().getSystemService(Context.ALARM_SERVICE);
+        }
+        alarmManager.cancel(pendingIntent);
+
+        SharedPreferences prefs = requireActivity().getSharedPreferences(SETTINGS_PREFS_NAME, 0);
+        prefs.edit().remove("alarmTime").apply();
+
+        Toast.makeText(requireActivity(), R.string.alarm_cancel, Toast.LENGTH_SHORT).show();
+    }
+
+    private void createNotificationChannel(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            CharSequence name = "akchannel";
+            String desc = "Channel for Alarm Manager";
+            int imp = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel("androidknowledge", name, imp);
+            channel.setDescription(desc);
+            NotificationManager notificationManager = requireActivity().getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+
 
     private void clearAllData() {
         // Get flashcard set count
@@ -191,6 +284,7 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
         prefs = requireActivity().getSharedPreferences(SETTINGS_PREFS_NAME, 0);
         prefs.edit().clear().apply();
     }
+
     private void importDefaultData() {
         // Import default data
 
@@ -202,50 +296,32 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
 
         // quiz data
         prefs = requireActivity().getSharedPreferences(QUIZ_PREFS_NAME, 0);
-        prefs.edit().putLong("quiz_set_datetime_1", 1715502221169L).apply();
-        prefs.edit().putLong("quiz_set_datetime_0", 1715502208611L).apply();
-        prefs.edit().putString("quiz_set_correct_answer_0_4", "Katze").apply();
-        prefs.edit().putString("quiz_set_correct_answer_1_3", "Vogel").apply();
-        prefs.edit().putInt("QuizSetCount", 2).apply();
-        prefs.edit().putString("quiz_set_question_0_0", "Fish").apply();
-        prefs.edit().putString("quiz_set_question_0_1", "Motorcycle").apply();
-        prefs.edit().putString("quiz_set_question_1_0", "Fish").apply();
-        prefs.edit().putString("quiz_set_question_0_2", "Bird").apply();
-        prefs.edit().putString("quiz_set_question_1_1", "Cat").apply();
-        prefs.edit().putString("quiz_set_source_0_0", "0").apply();
-        prefs.edit().putString("quiz_set_question_0_3", "Train").apply();
-        prefs.edit().putString("quiz_set_question_1_2", "Dog").apply();
-        prefs.edit().putString("quiz_set_source_0_1", "1").apply();
-        prefs.edit().putString("quiz_set_question_0_4", "Cat").apply();
-        prefs.edit().putString("quiz_set_source_1_0", "0").apply();
-        prefs.edit().putString("quiz_set_question_1_3", "Bird").apply();
-        prefs.edit().putString("quiz_set_title_0", "Animal+Trans").apply();
-        prefs.edit().putString("quiz_set_title_1", "Fish").apply();
-        prefs.edit().putString("quiz_set_question_0_0", "Animals").apply();
         prefs.edit().putString("quiz_set_id_0", "0").apply();
-        prefs.edit().putString("quiz_set_id_1", "1").apply();
-        prefs.edit().putInt("quiz_set_question_count_1", 4).apply();
+        prefs.edit().putLong("quiz_set_datetime_0", 1715533525159L).apply();
+        prefs.edit().putString("quiz_set_correct_answer_0_4", "Pfirsch").apply();
+        prefs.edit().putInt("QuizSetCount", 1).apply();
         prefs.edit().putInt("quiz_set_question_count_0", 5).apply();
+        prefs.edit().putString("quiz_set_question_0_0", "Apple").apply();
         prefs.edit().putString("quiz_set_user_answer_0_2", "").apply();
-        prefs.edit().putString("quiz_set_user_answer_1_1", "").apply();
         prefs.edit().putString("quiz_set_user_answer_0_1", "").apply();
-        prefs.edit().putString("quiz_set_user_answer_1_0", "").apply();
         prefs.edit().putString("quiz_set_user_answer_0_0", "").apply();
         prefs.edit().putInt("quiz_set_source_count_0", 2).apply();
         prefs.edit().putString("quiz_set_user_answer_0_4", "").apply();
-        prefs.edit().putString("quiz_set_user_answer_1_3", "").apply();
         prefs.edit().putString("quiz_set_user_answer_0_3", "").apply();
-        prefs.edit().putString("quiz_set_user_answer_1_2", "").apply();
-        prefs.edit().putInt("quiz_set_source_count_1", 1).apply();
-        prefs.edit().putString("quiz_set_correct_answer_0_1", "Motorrad").apply();
-        prefs.edit().putInt("quiz_set_correct_count_1", -1).apply();
-        prefs.edit().putString("quiz_set_correct_answer_1_0", "Fisch").apply();
+        prefs.edit().putString("quiz_set_question_0_1", "Ferry").apply();
+        prefs.edit().putString("quiz_set_question_0_2", "Motocycle").apply();
+        prefs.edit().putString("quiz_set_source_0_0", "1").apply();
+        prefs.edit().putString("quiz_set_question_0_3", "Airplane").apply();
+        prefs.edit().putString("quiz_set_source_0_1", "0").apply();
+        prefs.edit().putString("quiz_set_question_0_4", "Peach").apply();
+        prefs.edit().putString("quiz_set_correct_answer_0_1", "Fähre").apply();
         prefs.edit().putInt("quiz_set_correct_count_0", -1).apply();
-        prefs.edit().putString("quiz_set_correct_answer_0_0", "Fisch").apply();
-        prefs.edit().putString("quiz_set_correct_answer_0_3", "Zug").apply();
-        prefs.edit().putString("quiz_set_correct_answer_1_2", "Hund").apply();
-        prefs.edit().putString("quiz_set_correct_answer_0_2", "Vogel").apply();
-        prefs.edit().putString("quiz_set_correct_answer_1_1", "Katze").apply();
+        prefs.edit().putString("quiz_set_correct_answer_0_0", "Apfel").apply();
+        prefs.edit().putString("quiz_set_correct_answer_0_3", "Flugzeug").apply();
+        prefs.edit().putString("quiz_set_correct_answer_0_2", "Motorrad").apply();
+        prefs.edit().putString("quiz_set_title_0", "Quiz 1").apply();
+
+
 
         // Note Pref
         prefs = requireActivity().getSharedPreferences(NOTE_PREFS_NAME, 0);
@@ -283,47 +359,68 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
 
         // Set Pref
         prefs = requireActivity().getSharedPreferences(SET_PREFS_NAME, 0);
-        prefs.edit().putInt("SetCount", 3).apply();
-        prefs.edit().putString("set_title_0", "Animals").apply();
+        prefs.edit().putInt("SetCount", 2).apply();
+        prefs.edit().putString("set_title_0", "Transport").apply();
         prefs.edit().putLong("set_datetime_0", 1715501657929L).apply();
         prefs.edit().putString("set_id_1", "1").apply();
-        prefs.edit().putString("set_title_1", "Transport").apply();
-        prefs.edit().putString("set_id_2", "2").apply();
-        prefs.edit().putString("set_title_2", "Fruit").apply();
-        prefs.edit().putLong("set_datetime_2", 1715501903381L).apply();
+        prefs.edit().putString("set_title_1", "Fruit").apply();
         prefs.edit().putString("set_id_0", "0").apply();
         prefs.edit().putLong("set_datetime_1", 1715502113715L).apply();
-        prefs.edit().putInt("set_count_2", 8).apply();
         prefs.edit().putInt("set_count_1", 4).apply();
-        prefs.edit().putInt("set_count_0", 4).apply();
+        prefs.edit().putInt("set_count_0", 5).apply();
 
         // Card Pref 0
         prefs = requireActivity().getSharedPreferences(CARD_PREFS_NAME_PREFIX + "0", 0);
         prefs.edit().putString("set_0_card_1_image", "").apply();
-        prefs.edit().putLong("set_0_card_2_datetime", 1715501657936L).apply();
-        prefs.edit().putString("set_0_card_1_back", "Katze").apply();
+        prefs.edit().putLong("set_0_card_2_datetime", 1715531132432L).apply();
         prefs.edit().putInt("set_0_card_0_setID", 0).apply();
-        prefs.edit().putString("set_0_card_2_back", "Vogel").apply();
-        prefs.edit().putString("set_0_card_0_image", "").apply();
-        prefs.edit().putString("set_0_card_0_front", "Dog").apply();
-        prefs.edit().putString("set_0_card_3_back", "Fisch").apply();
-        prefs.edit().putString("set_0_card_0_back", "Hund").apply();
-        prefs.edit().putString("set_0_card_2_front", "Bird").apply();
-        prefs.edit().putInt("set_0_card_3_setID", 0).apply();
-        prefs.edit().putLong("set_0_card_1_datetime", 1715501657935L).apply();
+        prefs.edit().putString("set_0_card_2_back", "Auto").apply();
+        prefs.edit().putString("set_0_card_4_front", "Ferry").apply();
+        prefs.edit().putString("set_0_card_2_front", "Car").apply();
+        prefs.edit().putLong("set_0_card_1_datetime", 1715501657933L).apply();
+        prefs.edit().putLong("set_0_card_4_datetime", 1715501657938L).apply();
         prefs.edit().putInt("set_0_card_2_setID", 0).apply();
-        prefs.edit().putString("set_0_card_3_front", "Fish").apply();
-        prefs.edit().putInt("CardCount", 4).apply();
-        prefs.edit().putLong("set_0_card_0_datetime", 1715501657935L).apply();
-        prefs.edit().putString("set_0_card_1_front", "Cat").apply();
         prefs.edit().putString("set_0_card_3_image", "").apply();
+        prefs.edit().putString("set_0_card_1_back", "Flugzeug").apply();
+        prefs.edit().putInt("set_0_card_4_setID", 0).apply();
+        prefs.edit().putString("set_0_card_0_image", "").apply();
+        prefs.edit().putString("set_0_card_0_front", "Train").apply();
+        prefs.edit().putString("set_0_card_4_back", "Fähre").apply();
+        prefs.edit().putString("set_0_card_3_back", "Motorrad").apply();
+        prefs.edit().putString("set_0_card_0_back", "Zug").apply();
+        prefs.edit().putInt("set_0_card_3_setID", 0).apply();
+        prefs.edit().putString("set_0_card_4_image", "").apply();
+        prefs.edit().putString("set_0_card_3_front", "Motocycle").apply();
+        prefs.edit().putInt("CardCount", 5).apply();
+        prefs.edit().putLong("set_0_card_0_datetime", 1715501657928L).apply();
+        prefs.edit().putString("set_0_card_1_front", "Airplane").apply();
         prefs.edit().putString("set_0_card_2_image", "").apply();
-        prefs.edit().putLong("set_0_card_3_datetime", 1715501657937L).apply();
+        prefs.edit().putLong("set_0_card_3_datetime", 1715501657933L).apply();
         prefs.edit().putInt("set_0_card_1_setID", 0).apply();
 
-
-
-
+        // Card Pref 1
+        prefs = requireActivity().getSharedPreferences(CARD_PREFS_NAME_PREFIX + "1", 0);
+        prefs.edit().putInt("set_1_card_0_setID", 1).apply();
+        prefs.edit().putLong("set_1_card_1_datetime", 1715531305661L).apply();
+        prefs.edit().putString("set_1_card_1_back", "Pfirsch").apply();
+        prefs.edit().putString("set_1_card_2_image", "").apply();
+        prefs.edit().putString("set_1_card_1_front", "Peach").apply();
+        prefs.edit().putString("set_1_card_0_image", "").apply();
+        prefs.edit().putString("set_1_card_2_back", "Zitronen").apply();
+        prefs.edit().putString("set_1_card_1_image", "").apply();
+        prefs.edit().putString("set_1_card_0_front", "Apple").apply();
+        prefs.edit().putInt("set_1_card_3_setID", 1).apply();
+        prefs.edit().putLong("set_1_card_3_datetime", 1715531305665L).apply();
+        prefs.edit().putString("set_1_card_0_back", "Apfel").apply();
+        prefs.edit().putLong("set_1_card_0_datetime", 1715531305660L).apply();
+        prefs.edit().putString("set_1_card_3_front", "Pear").apply();
+        prefs.edit().putInt("CardCount", 4).apply();
+        prefs.edit().putInt("set_1_card_1_setID", 1).apply();
+        prefs.edit().putInt("set_1_card_2_setID", 1).apply();
+        prefs.edit().putString("set_1_card_2_front", "Lemon").apply();
+        prefs.edit().putLong("set_1_card_2_datetime", 1715531305662L).apply();
+        prefs.edit().putString("set_1_card_3_back", "Birne").apply();
+        prefs.edit().putString("set_1_card_3_image", "").apply();
 
     }
 

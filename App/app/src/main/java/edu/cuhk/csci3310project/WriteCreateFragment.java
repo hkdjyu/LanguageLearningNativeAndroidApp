@@ -107,6 +107,8 @@ public class WriteCreateFragment extends Fragment {
         AiMainFragment aiMainFragment = new AiMainFragment();
         Bundle bundle = new Bundle();
         bundle.putString("content", content);
+        bundle.putInt("mode", 1);
+        bundle.putBoolean("sendAutomatically", false);
         aiMainFragment.setArguments(bundle);
 
         MainActivity mainActivity = (MainActivity) requireActivity();

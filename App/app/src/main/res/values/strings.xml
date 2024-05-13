@@ -70,6 +70,28 @@
     <string name="import_text">Import</string>
     <string name="clear">Clear</string>
     <string name="clear_all_data">Clear All Data</string>
+    <string name="start_a_quiz">Start a Random Quiz</string>
+    <string name="view_a_flashcard_set">View a Flashcard Set</string>
+    <string name="translate">Translate</string>
+    <string name="translate_input_hint">Type your word here...</string>
+    <string name="write_something">Write Something</string>
+    <string name="progress">My Progress</string>
+    <string name="start_action">Start Action</string>
+    <string name="explain">Explain</string>
+    <string name="notification_time">Daily Notification Time</string>
+    <string name="disabled">disabled</string>
+    <string name="enabled">enabled</string>
+
+    <string name="number_of_articles">Articles Created</string>
+    <string name="number_of_flashcard_set">Flashcard Set Created</string>
+    <string name="number_of_flashcards">Flashcard Created</string>
+    <string name="number_of_quiz_done">Quiz Done</string>
+
+    <string name="notification_title">Notification</string>
+    <string name="notification_content">Time to start a quiz!</string>
+    <string name="alarm_set">Alarm Set</string>
+    <string name="alarm_cancel">Alarm Set</string>
+    <string name="invalid_time">Invalid Time: Please enter a valid time (HH:mm)</string>
 
 
 </resources>

@@ -71,6 +71,29 @@
     <string name="import_text">導入</string>
     <string name="clear">清空</string>
     <string name="clear_all_data">清空所有數據</string>
+    <string name="start_a_quiz">隨機測驗</string>
+    <string name="view_a_flashcard_set">查看單字卡</string>
+    <string name="translate">翻譯</string>
+    <string name="translate_input_hint">在此輸入單字...</string>
+    <string name="write_something">寫點什麼</string>
+    <string name="progress">我的進度</string>
+    <string name="start_action">開始行動</string>
+    <string name="explain">解釋</string>
+    <string name="notification_time">每日通知時間</string>
+    <string name="disabled">已停用</string>
+    <string name="enabled">已啟用</string>
+
+    <string name="number_of_articles">已創建文章數量</string>
+    <string name="number_of_flashcard_set">已創建單字卡合集數量</string>
+    <string name="number_of_flashcards">已創建單字卡數量</string>
+    <string name="number_of_quiz_done">已完成測驗數量</string>
+
+    <string name="notification_title">每日通知</string>
+    <string name="notification_content">來自CSCI3310Project的每日通知</string>
+    <string name="alarm_set">鬧鐘已設置</string>
+    <string name="alarm_cancel">鬧鐘已取消</string>
+    <string name="invalid_time">無效時間：請輸入有效時間（HH:mm）</string>
+
 
 
 </resources>

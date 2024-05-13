@@ -75,16 +75,21 @@ public class AiMainFragment extends Fragment implements AdapterView.OnItemSelect
     private List<ChatMessage> messageList;
 
     private String initialMessage = "";
+    private int initialMode = -1;
+    private boolean sendAutomatically = false;
+
     private String apiKey = "";
 
     public AiMainFragment() {
         // Required empty public constructor
     }
 
-    public static AiMainFragment newInstance(String content) {
+    public static AiMainFragment newInstance(String content, int mode, boolean sendAutomatically) {
         AiMainFragment fragment = new AiMainFragment();
         Bundle args = new Bundle();
         args.putString("content", content);
+        args.putInt("mode", mode);
+        args.putBoolean("sendAutomatically", sendAutomatically);
         fragment.setArguments(args);
         return fragment;
     }
@@ -94,7 +99,21 @@ public class AiMainFragment extends Fragment implements AdapterView.OnItemSelect
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             initialMessage = getArguments().getString("content", "");
-            currentMode = mode.PROOFREADING;
+            switch (getArguments().getInt("mode", -1)) {
+                case 0:
+                    initialMode = 0;
+                    break;
+                case 1:
+                    initialMode = 1;
+                    break;
+                case 2:
+                    initialMode = 2;
+                    break;
+                default:
+                    initialMode = -1;
+                    break;
+            }
+            sendAutomatically = getArguments().getBoolean("sendAutomatically", false);
         }
 
         Log.d(TAG, "Initial Message: " + initialMessage);
@@ -113,6 +132,9 @@ public class AiMainFragment extends Fragment implements AdapterView.OnItemSelect
         loadMessagesFromPreferences();
         displayMessages();
 
+        if (sendAutomatically) {
+            generateResponse();
+        }
         return rootView;
     }
 
@@ -137,6 +159,11 @@ public class AiMainFragment extends Fragment implements AdapterView.OnItemSelect
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
+
+    }
+
+    public void GenerateResponse() {
+        // wait for onCreateView to finish
 
     }
 
@@ -200,6 +227,11 @@ public class AiMainFragment extends Fragment implements AdapterView.OnItemSelect
             inputText.setText(initialMessage);
             modeSpinner.setSelection(1);
         }
+
+        if (initialMode != -1) {
+            modeSpinner.setSelection(initialMode);
+            currentMode = mode.values()[initialMode];
+        }
     }
 
     private void showClearDialog() {
@@ -244,7 +276,6 @@ public class AiMainFragment extends Fragment implements AdapterView.OnItemSelect
         // get language from shared preferences
         SharedPreferences prefs = requireActivity().getSharedPreferences("settingsPrefs", 0);
         selectedLanguage = prefs.getString("language", "ENGLISH");
-        selectedLanguage = Objects.requireNonNull(AppLanguage.fromCode(selectedLanguage)).name();
 
         String prompt = "Generate a response in " + selectedLanguage + ".\n";
 
