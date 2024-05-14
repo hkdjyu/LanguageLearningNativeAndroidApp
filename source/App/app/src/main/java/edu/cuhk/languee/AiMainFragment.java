@@ -59,7 +59,6 @@ public class AiMainFragment extends Fragment implements AdapterView.OnItemSelect
     private static final String TAG = "AiMainFragment";
     private static final String PREFS_NAME = "MessagePrefs";
     private static final String KEY_MESSAGE_COUNT = "MessageCount";
-    private static final String DEFAULT_API_KEY = "AIzaSyCtBVpBfa_18IEaNLuSHFK2nY499MVNqHo";
 
     private String selectedLanguage = "繁體中文";
     private mode currentMode = mode.FREE;
@@ -175,7 +174,7 @@ public class AiMainFragment extends Fragment implements AdapterView.OnItemSelect
         } else {
             apiKey = prefs.getString("geminiAPIKey", "");
             if (apiKey.isEmpty()) {
-                apiKey = DEFAULT_API_KEY;
+                Toast.makeText(getContext(), R.string.api_key_not_set, Toast.LENGTH_SHORT).show();
             }
         }
 

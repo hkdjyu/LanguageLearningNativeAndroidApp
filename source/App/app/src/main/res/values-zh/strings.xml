@@ -44,6 +44,7 @@
     <string name="language">語言</string>
     <string name="google_gemini_api_key">谷歌 Gemini API 金鑰</string>
     <string name="ai_generating_response">生成中...</string>
+    <string name="api_key_not_set">谷歌 Gemini API 金鑰未設置</string>
 
     <string name="fail_to_generate_response">無法生成回應</string>
     <string name="fail_to_copy_message">無法複製訊息</string>
