@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CSCI3310Project</string>
+    <string name="app_name">Languee</string>
     <string name="open_nav">Open Navigation</string>
     <string name="close_nav">Close Navigation</string>
     <string name="close_button">Close</string>
@@ -79,7 +79,7 @@
     <string name="progress">My Progress</string>
     <string name="start_action">Start Action</string>
     <string name="explain">Explain</string>
-    <string name="notification_time">Daily Notification Time</string>
+    <string name="notification_time">Daily Reminder</string>
     <string name="disabled">disabled</string>
     <string name="enabled">enabled</string>
 
@@ -88,11 +88,15 @@
     <string name="number_of_flashcards">Flashcard Created</string>
     <string name="number_of_quiz_done">Quiz Done</string>
 
-    <string name="notification_title">Notification</string>
-    <string name="notification_content">Time to start a quiz!</string>
-    <string name="alarm_set">Alarm Set</string>
-    <string name="alarm_cancel">Alarm Cancelled</string>
-    <string name="invalid_time">Invalid Time: Please enter a valid time (HH:mm)</string>
+    <string name="notification_title">Language Time</string>
+    <string name="notification_content">Time to start learning!</string>
+    <string name="alarm_set">Notification is Set</string>
+    <string name="alarm_cancel">Notification is cancelled</string>
+    <string name="alarm_set_fail">Failed to set notification</string>
+    <string name="notification_permission_granted">Notification permission granted</string>
+    <string name="notification_permission_denied">Notification permission denied</string>
+    <string name="notification_permission_not_supported">Check notification permission</string>
+    <string name="invalid_time">Invalid Time, please enter in HH:MM format</string>
 
 
 </resources>

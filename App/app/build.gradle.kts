@@ -2,12 +2,14 @@ plugins {
     id("com.android.application")
 }
 
+val bundleID = "edu.cuhk.languee"
+
 android {
-    namespace = "edu.cuhk.csci3310project"
+    namespace = bundleID
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "edu.cuhk.csci3310project"
+        applicationId = bundleID
         minSdk = 24
         targetSdk = 34
         versionCode = 1

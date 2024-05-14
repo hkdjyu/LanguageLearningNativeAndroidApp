@@ -64,7 +64,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="0dp"
                     android:orientation="horizontal"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
                     <TextView
                         android:id="@+id/textView2"
@@ -85,7 +85,8 @@
                         android:gravity="center"
                         android:ems="10"
                         android:inputType="time"
-                        android:hint="00:00" />
+                        android:hint="00:00"
+                        android:visibility="visible"/>
 
                     <CheckBox
                     android:layout_width="wrap_content"
@@ -182,6 +183,17 @@
                     android:layout_marginBottom="25dp"
                     android:text="@string/developerMode"
                     android:visibility="gone"/>
+
+                <Button
+                    android:id="@+id/settingDeBugButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="DeBug"
+                    android:visibility="gone"/>
+
 
                 <View
                     android:layout_width="match_parent"

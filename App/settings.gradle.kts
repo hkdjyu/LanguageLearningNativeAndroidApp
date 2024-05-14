@@ -13,6 +13,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "CSCI3310Project"
+rootProject.name = "Languee"
 include(":app")
  

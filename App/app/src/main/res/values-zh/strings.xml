@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">CSCI3310Project</string>
+    <string name="app_name">Languee</string>
     <string name="open_nav">開啟主選單</string>
     <string name="close_nav">關閉主選單</string>
     <string name="close_button">關閉</string>
@@ -80,7 +80,7 @@
     <string name="progress">我的進度</string>
     <string name="start_action">開始行動</string>
     <string name="explain">解釋</string>
-    <string name="notification_time">每日通知時間</string>
+    <string name="notification_time">每天提醒</string>
     <string name="disabled">已停用</string>
     <string name="enabled">已啟用</string>
 
@@ -89,11 +89,15 @@
     <string name="number_of_flashcards">已創建單字卡數量</string>
     <string name="number_of_quiz_done">已完成測驗數量</string>
 
-    <string name="notification_title">每日通知</string>
-    <string name="notification_content">來自CSCI3310Project的每日通知</string>
-    <string name="alarm_set">鬧鐘已設置</string>
-    <string name="alarm_cancel">鬧鐘已取消</string>
-    <string name="invalid_time">無效時間：請輸入有效時間（HH:mm）</string>
+    <string name="notification_title">語言時間</string>
+    <string name="notification_content">是時候開始學習了！</string>
+    <string name="alarm_set">通知已啟用</string>
+    <string name="alarm_cancel">通知已取消</string>
+    <string name="alarm_set_fail">無法設置通知</string>
+    <string name="notification_permission_granted">通知權限已授予</string>
+    <string name="notification_permission_denied">通知權限已拒絕</string>
+    <string name="notification_permission_not_supported">檢查應用程式權限</string>
+    <string name="invalid_time">無效時間，請確認時間格式HH:MM</string>
 
 
 
