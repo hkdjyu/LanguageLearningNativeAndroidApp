@@ -214,9 +214,8 @@ Google Gemini Pro 1.0 model is used for generating AI responses. Please make sur
 - Check whether your region support Google Gemini  
     [List of available countries and regions (external link)](https://ai.google.dev/gemini-api/docs/available-regions#available_regions)  
 
-
-- ~~Set your Google Gemini API Key~~  [How to set up my Gemini API Key](#google-gemini-api-key)    
-_currently not required, but you can still use your own key_
+- Set your Google Gemini API Key  
+  [How to set up my Gemini API Key](#google-gemini-api-key)    
 
 If your region is not available, consider using a Virtual Private Network (VPN).  
 You may consider `ProtonVPN` (a free VPN service provider) if you do not have one.   
