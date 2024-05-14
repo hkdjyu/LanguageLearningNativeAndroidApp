@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="sort_options">
+        <item>Date</item>
+        <item>Title</item>
+    </string-array>
+    <string-array name="ai_mode_options">
+        <item>Free</item>
+        <item>Proofread</item>
+        <item>Summarise</item>
+    </string-array>
+    <string-array name="support_language">
+        <item>English</item>
+        <item>Traditional Chinese</item>
+    </string-array>
+</resources>

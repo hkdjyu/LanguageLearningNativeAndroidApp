@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn = "navigation_view">
+
+    <group
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/nav_home"
+            android:title="@string/home"/>
+
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/nav_settings"
+            android:title="@string/settings"/>
+
+        <item
+            android:id="@+id/nav_quiz"
+            android:icon="@drawable/nav_quiz"
+            android:title="@string/quiz"/>
+
+        <item
+            android:id="@+id/nav_ai"
+            android:icon="@drawable/nav_ai"
+            android:title="@string/ai"/>
+
+        <item
+            android:id="@+id/nav_write"
+            android:icon="@drawable/nav_write"
+            android:title="@string/write"/>
+
+        <item
+            android:id="@+id/nav_flashcard"
+            android:icon="@drawable/nav_flashcard"
+            android:title="@string/flashcard"/>
+
+    </group>
+
+</menu>

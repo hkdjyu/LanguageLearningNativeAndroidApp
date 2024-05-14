@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+    android:layout_marginBottom="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:orientation="horizontal"
+        android:id="@+id/quiz_flashcard_set_item"
+        android:gravity="fill_horizontal"
+        style="@style/FlashcardSetPreview">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:weightSum="2">
+            <TextView
+                android:id = "@+id/quiz_flashcard_set_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="200dp"
+                android:layout_weight="1"
+                android:layout_marginBottom="10dp"
+                android:text="Set Title"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                style="@style/PrimaryText"/>
+
+            <TextView
+                android:id = "@+id/quiz_flashcard_set_datetime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="2024-05-07 Tue 12:00:00"
+                android:textSize="10dp"
+                style="@style/TertiaryText"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:id="@+id/quiz_flashcard_set_count"
+            style="@style/PrimaryText"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="0dp"
+            android:gravity="center"
+            android:text="77"
+            android:textAlignment="center"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleX="1.2"
+            android:scaleY="1.2"
+            android:id="@+id/quiz_flashcard_set_checkbox"
+            android:gravity="center"/>
+
+
+
+    </LinearLayout>
+
+</LinearLayout>
